@@ -193,21 +193,23 @@ class LogoImage:
             progress_bar = tqdm(total=self.size, desc="Generating Logo")
 
             # Standard distance used for logo outline
-            standard_distance = self.Line.standard_distance * self.unit
+            standard_distance2 = pow(self.Line.standard_distance * self.unit, 2)
+            body_distance2 = pow(self.Line.standard_distance * self.unit - outline_thickness, 2)
+            unit2=pow(self.unit,2)
             for x in range(self.size):
                 for y in range(self.size):
                     for line in self.lines:
-                        distance = (
-                            line.distance(
+                        distance2 = (
+                            line.distance2(
                                 (x - self.size / 2) / self.unit,
                                 (y - self.size / 2) / self.unit,
                             )
-                            * self.unit
+                            * unit2
                         )
-                        if distance <= standard_distance - outline_thickness:
+                        if distance2 <= body_distance2:
                             self.tensor[x, y, :] = line.body_color
                             break
-                        elif distance <= standard_distance:
+                        elif distance2 <= standard_distance2:
                             self.tensor[x, y, :] = line.outline_color
                             break
                 progress_bar.update(1)
@@ -236,7 +238,7 @@ class LogoImage:
                 self.C = -self.x1 * self.A - self.y1 * self.B
                 self.D = pow(self.A, 2) + pow(self.B, 2)
 
-            def distance(self, x, y):
+            def distance2(self, x, y):
                 """
                 Calculate the distance between a point and the line.
 
@@ -249,13 +251,13 @@ class LogoImage:
                 """
                 r = (x * self.A + y * self.B + self.C) / self.D
                 if r <= 0:
-                    return math.sqrt(pow(x - self.x1, 2) + pow(y - self.y1, 2))
+                    return pow(x - self.x1, 2) + pow(y - self.y1, 2)
                 elif r >= 1:
-                    return math.sqrt(pow(x - self.x2, 2) + pow(y - self.y2, 2))
+                    return pow(x - self.x2, 2) + pow(y - self.y2, 2)
                 else:
                     xc = self.x1 + r * self.A
                     yc = self.y1 + r * self.B
-                    return math.sqrt(pow(x - xc, 2) + pow(y - yc, 2))
+                    return pow(x - xc, 2) + pow(y - yc, 2)
 
         def get_logo(self):
             """
@@ -359,10 +361,10 @@ class LogoImage:
 
 if __name__ == "__main__":
     # Set configuration parameters
-    logo_size_ratio = 0.7
+    logo_size_ratio = 0.5
     circle_size_ratio = 1
-    use_round_shape = True
-    image_shape = "circle"
+    use_round_shape = False
+    image_shape = "wide"
     save_format = "PNG"
 
     # Define the theme colors and background colors for the logo (used in color combinations)
@@ -372,15 +374,22 @@ if __name__ == "__main__":
     # Generate logo images for different configurations
 
     # Generate logo images for diffetent sizes and shapes
-    for power in range(6):
-        width = 128 * pow(2, power)
-        height = 128 * pow(2, power)
+    for power in range(1):
+        width = 256 * pow(2, power)
+        height = 256 * pow(2, power)
 
         # Create a directory to save images with different sizes and shapes
         script_directory = os.path.dirname(os.path.abspath(__file__))
+        # save_folder = os.path.join(
+        #     script_directory,
+        #     output_folder,
+        #     image_shape,
+        #     str(width),
+        # )
         save_folder = os.path.join(
             script_directory,
             output_folder,
+            "test",
             image_shape,
             str(width),
         )
