@@ -11,7 +11,7 @@ os.makedirs(output_folder, exist_ok=True)
 
 # Define RGBA color constants for easy reference
 Z_RED = (240, 0, 80, 255)
-Z_BLUE = (8, 130, 163, 255)
+Z_BLUE = (8, 131, 163, 255)
 Z_YELLOW = (240, 222, 24, 255)
 DARK = (15, 15, 15, 255)
 LIGHT = (240, 240, 240, 255)
@@ -19,16 +19,17 @@ WHITE = (255, 255, 255, 255)
 BLACK = (0, 0, 0, 255)
 TRANSPARENT = (0, 0, 0, 0)
 
+
 # Create a color map to associate color constants with human-readable names
 COLOR_MAP = {
-    Z_RED: "ZRED",
-    Z_BLUE: "ZBLUE",
-    Z_YELLOW: "ZYELLOW",
-    DARK: "DARK",
-    LIGHT: "LIGHT",
-    WHITE: "WHITE",
-    BLACK: "BLACK",
-    TRANSPARENT: "TRANSPARENT",
+    Z_RED: "zRed",
+    Z_BLUE: "zBlue",
+    Z_YELLOW: "zYellow",
+    DARK: "dark",
+    LIGHT: "light",
+    WHITE: "white",
+    BLACK: "black",
+    TRANSPARENT: "transparent",
 }
 
 
@@ -314,13 +315,11 @@ class LogoImage:
         """
         return self.result
 
-    def save(self) -> None:
+    def save(self, path, format) -> None:
         """
         Save the final image to a file.
         """
-        self.result.save(
-            os.path.join(output_folder, f"{self.infomation}.png"), format="PNG"
-        )
+        self.result.save(path, format=format)
 
     def get_info(self):
         """
@@ -330,7 +329,7 @@ class LogoImage:
             str: Information string for file naming.
         """
         image_info = (
-            "Z_logo_"
+            "z_logo_"
             + str(self.width)
             + "_"
             + str(self.height)
@@ -360,9 +359,11 @@ class LogoImage:
 
 if __name__ == "__main__":
     # Set configuration parameters
-    logo_size_ratio = 0.5
-    circle_size_ratio = 0.6
-    use_round_shape = False
+    logo_size_ratio = 0.7
+    circle_size_ratio = 1
+    use_round_shape = True
+    image_shape = "circle"
+    save_format = "PNG"
 
     # Define the theme colors and background colors for the logo (used in color combinations)
     THEME_COLORS = [Z_RED, Z_BLUE, Z_YELLOW]
@@ -371,9 +372,19 @@ if __name__ == "__main__":
     # Generate logo images for different configurations
 
     # Generate logo images for diffetent sizes and shapes
-    for power in range(3):
-        width = 1920 * pow(2, power)
-        height = 1080 * pow(2, power)
+    for power in range(6):
+        width = 128 * pow(2, power)
+        height = 128 * pow(2, power)
+
+        # Create a directory to save images with different sizes and shapes
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        save_folder = os.path.join(
+            script_directory,
+            output_folder,
+            image_shape,
+            str(width),
+        )
+        os.makedirs(save_folder, exist_ok=True)
 
         # Generate logo images for different background colors
         for background_color in BACKGROUND_COLORS:
@@ -407,20 +418,27 @@ if __name__ == "__main__":
                             break
 
                         # Generate and save the logo image with the current combination of colors
-                        LogoImage(
+                        instance = LogoImage(
                             height=height,
                             width=width,
                             logo_size_ratio=logo_size_ratio,
                             circle_size_ratio=circle_size_ratio,
                             use_round_shape=use_round_shape,
-                            background_color=background_color,
+                            background_color=TRANSPARENT,
                             circle_body_color=circle_color,
                             circle_outline_color=circle_color,
                             single_line_body_color=single_line_color,
                             single_line_outline_color=single_line_color,
                             normal_line_body_color=normal_line_color,
                             normal_line_outline_color=normal_line_color,
-                        ).save()
+                        )
+                        instance.save(
+                            os.path.join(
+                                save_folder,
+                                f"{instance.get_info()}.{save_format}",
+                            ),
+                            format=save_format,
+                        )
 
                         # Add the current combination to the history colors
                         history_colors.append(current_combination)
