@@ -5,20 +5,24 @@ import math
 from tqdm import tqdm
 
 # Define the folder where the generated logo images will be saved
+# Get the directory of the current script
 script_directory = os.path.dirname(os.path.abspath(__file__))
 output_folder = os.path.join(script_directory, "output")
+# Create the output folder if it doesn't exist
 os.makedirs(output_folder, exist_ok=True)
 
 # Define RGBA color constants for easy reference
+# Colors for the logo elements
 Z_RED = (240, 0, 80, 255)
 Z_BLUE = (8, 131, 163, 255)
 Z_YELLOW = (240, 222, 24, 255)
+# Neutral colors for background and lines
 DARK = (15, 15, 15, 255)
 LIGHT = (240, 240, 240, 255)
 WHITE = (255, 255, 255, 255)
 BLACK = (0, 0, 0, 255)
+# Transparent color
 TRANSPARENT = (0, 0, 0, 0)
-
 
 # Create a color map to associate color constants with human-readable names
 COLOR_MAP = {
@@ -192,17 +196,21 @@ class LogoImage:
             # Draw the logo by iterating over all pixels
             progress_bar = tqdm(total=self.size, desc="Generating Logo")
 
-            # Standard distance used for logo outline
+            # Pre-calculate variables for the loop
             standard_distance2 = pow(self.Line.standard_distance * self.unit, 2)
             sqrt2_standard_distance = math.sqrt(2) * self.Line.standard_distance
             body_distance2 = pow(
                 self.Line.standard_distance * self.unit - outline_thickness, 2
             )
             unit2 = pow(self.unit, 2)
+
+            # Iterate over all pixels in the slice
             for x in range(self.size):
                 for y in range(self.size):
+                    # Transform the coordinates to logo coordinates
                     x_in_logo = (x - self.size / 2) / self.unit
                     y_in_logo = (y - self.size / 2) / self.unit
+
                     if (
                         (
                             not (
@@ -217,8 +225,9 @@ class LogoImage:
                             )
                         )
                         and (not (x_in_logo - y_in_logo > 3 + sqrt2_standard_distance))
-                        and (not (x_in_logo - y_in_logo > -3 - sqrt2_standard_distance))
-                    ):
+                        and (not (x_in_logo - y_in_logo < -3 - sqrt2_standard_distance))
+                    ):  # Reduce the calculation range
+                        # Calculate the distance from the point to each line segment and determine the color of the current pixel
                         for line in self.lines:
                             distance2 = (
                                 line.distance2(
@@ -314,7 +323,6 @@ class LogoImage:
             for x in range(self.radius * 2):
                 for y in range(self.radius * 2):
                     r2 = pow(x - radius, 2) + pow(y - radius, 2)
-
                     if r2 <= body_distance2:
                         self.tensor[x, y, :] = body_color
                     elif r2 <= radius2:
@@ -384,6 +392,7 @@ class LogoImage:
 
 if __name__ == "__main__":
     # Set configuration parameters
+    # Users can change the values
     logo_size_ratio = 0.5
     circle_size_ratio = 1
     use_round_shape = False
@@ -396,7 +405,7 @@ if __name__ == "__main__":
 
     # Generate logo images for different configurations
 
-    # Generate logo images for diffetent sizes and shapes
+    # Generate logo images for different sizes and shapes
     for power in range(3):
         width = 1920 * pow(2, power)
         height = 1080 * pow(2, power)
@@ -407,7 +416,7 @@ if __name__ == "__main__":
         save_folder = os.path.join(
             script_directory,
             output_folder,
-            "test",
+            # "test",
             image_shape,
             str(width),
         )
