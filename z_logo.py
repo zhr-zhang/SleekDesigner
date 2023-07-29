@@ -219,21 +219,20 @@ class LogoImage:
                         and (not (x_in_logo - y_in_logo > 3 + sqrt2_standard_distance))
                         and (not (x_in_logo - y_in_logo > -3 - sqrt2_standard_distance))
                     ):
-                        pass
-                    for line in self.lines:
-                        distance2 = (
-                            line.distance2(
-                                x_in_logo,
-                                y_in_logo,
+                        for line in self.lines:
+                            distance2 = (
+                                line.distance2(
+                                    x_in_logo,
+                                    y_in_logo,
+                                )
+                                * unit2
                             )
-                            * unit2
-                        )
-                        if distance2 <= body_distance2:
-                            self.tensor[x, y, :] = line.body_color
-                            break
-                        elif distance2 <= standard_distance2:
-                            self.tensor[x, y, :] = line.outline_color
-                            break
+                            if distance2 <= body_distance2:
+                                self.tensor[x, y, :] = line.body_color
+                                break
+                            elif distance2 <= standard_distance2:
+                                self.tensor[x, y, :] = line.outline_color
+                                break
                 progress_bar.update(1)
             progress_bar.close()
 
