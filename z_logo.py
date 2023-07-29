@@ -11,7 +11,7 @@ os.makedirs(output_folder, exist_ok=True)
 
 # Define RGBA color constants for easy reference
 Z_RED = (240, 0, 80, 255)
-Z_BLUE = (8, 130, 163, 255)
+Z_BLUE = (8, 131, 163, 255)
 Z_YELLOW = (240, 222, 24, 255)
 DARK = (15, 15, 15, 255)
 LIGHT = (240, 240, 240, 255)
@@ -19,16 +19,17 @@ WHITE = (255, 255, 255, 255)
 BLACK = (0, 0, 0, 255)
 TRANSPARENT = (0, 0, 0, 0)
 
+
 # Create a color map to associate color constants with human-readable names
 COLOR_MAP = {
-    Z_RED: "ZRED",
-    Z_BLUE: "ZBLUE",
-    Z_YELLOW: "ZYELLOW",
-    DARK: "DARK",
-    LIGHT: "LIGHT",
-    WHITE: "WHITE",
-    BLACK: "BLACK",
-    TRANSPARENT: "TRANSPARENT",
+    Z_RED: "zRed",
+    Z_BLUE: "zBlue",
+    Z_YELLOW: "zYellow",
+    DARK: "dark",
+    LIGHT: "light",
+    WHITE: "white",
+    BLACK: "black",
+    TRANSPARENT: "transparent",
 }
 
 
@@ -192,21 +193,25 @@ class LogoImage:
             progress_bar = tqdm(total=self.size, desc="Generating Logo")
 
             # Standard distance used for logo outline
-            standard_distance = self.Line.standard_distance * self.unit
+            standard_distance2 = pow(self.Line.standard_distance * self.unit, 2)
+            body_distance2 = pow(
+                self.Line.standard_distance * self.unit - outline_thickness, 2
+            )
+            unit2 = pow(self.unit, 2)
             for x in range(self.size):
                 for y in range(self.size):
                     for line in self.lines:
-                        distance = (
-                            line.distance(
+                        distance2 = (
+                            line.distance2(
                                 (x - self.size / 2) / self.unit,
                                 (y - self.size / 2) / self.unit,
                             )
-                            * self.unit
+                            * unit2
                         )
-                        if distance <= standard_distance - outline_thickness:
+                        if distance2 <= body_distance2:
                             self.tensor[x, y, :] = line.body_color
                             break
-                        elif distance <= standard_distance:
+                        elif distance2 <= standard_distance2:
                             self.tensor[x, y, :] = line.outline_color
                             break
                 progress_bar.update(1)
@@ -235,7 +240,7 @@ class LogoImage:
                 self.C = -self.x1 * self.A - self.y1 * self.B
                 self.D = pow(self.A, 2) + pow(self.B, 2)
 
-            def distance(self, x, y):
+            def distance2(self, x, y):
                 """
                 Calculate the distance between a point and the line.
 
@@ -248,13 +253,13 @@ class LogoImage:
                 """
                 r = (x * self.A + y * self.B + self.C) / self.D
                 if r <= 0:
-                    return math.sqrt(pow(x - self.x1, 2) + pow(y - self.y1, 2))
+                    return pow(x - self.x1, 2) + pow(y - self.y1, 2)
                 elif r >= 1:
-                    return math.sqrt(pow(x - self.x2, 2) + pow(y - self.y2, 2))
+                    return pow(x - self.x2, 2) + pow(y - self.y2, 2)
                 else:
                     xc = self.x1 + r * self.A
                     yc = self.y1 + r * self.B
-                    return math.sqrt(pow(x - xc, 2) + pow(y - yc, 2))
+                    return pow(x - xc, 2) + pow(y - yc, 2)
 
         def get_logo(self):
             """
@@ -285,13 +290,15 @@ class LogoImage:
 
             # Draw the circle by iterating over all pixels
             progress_bar = tqdm(total=self.radius * 2, desc="Generating Circle")
+            radius2 = pow(radius, 2)
+            body_distance2 = pow(radius - outline_thickness, 2)
             for x in range(self.radius * 2):
                 for y in range(self.radius * 2):
-                    r = math.sqrt(pow(x - radius, 2) + pow(y - radius, 2))
+                    r2 = pow(x - radius, 2) + pow(y - radius, 2)
 
-                    if r <= radius - outline_thickness:
+                    if r2 <= body_distance2:
                         self.tensor[x, y, :] = body_color
-                    elif r <= radius:
+                    elif r2 <= radius2:
                         self.tensor[x, y, :] = outline_color
                 progress_bar.update(1)
             progress_bar.close()
@@ -314,13 +321,11 @@ class LogoImage:
         """
         return self.result
 
-    def save(self) -> None:
+    def save(self, path, format) -> None:
         """
         Save the final image to a file.
         """
-        self.result.save(
-            os.path.join(output_folder, f"{self.infomation}.png"), format="PNG"
-        )
+        self.result.save(path, format=format)
 
     def get_info(self):
         """
@@ -330,7 +335,7 @@ class LogoImage:
             str: Information string for file naming.
         """
         image_info = (
-            "Z_logo_"
+            "z_logo_"
             + str(self.width)
             + "_"
             + str(self.height)
@@ -361,8 +366,10 @@ class LogoImage:
 if __name__ == "__main__":
     # Set configuration parameters
     logo_size_ratio = 0.5
-    circle_size_ratio = 0.6
+    circle_size_ratio = 1
     use_round_shape = False
+    image_shape = "wide"
+    save_format = "PNG"
 
     # Define the theme colors and background colors for the logo (used in color combinations)
     THEME_COLORS = [Z_RED, Z_BLUE, Z_YELLOW]
@@ -374,6 +381,23 @@ if __name__ == "__main__":
     for power in range(3):
         width = 1920 * pow(2, power)
         height = 1080 * pow(2, power)
+
+        # Create a directory to save images with different sizes and shapes
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        # save_folder = os.path.join(
+        #     script_directory,
+        #     output_folder,
+        #     image_shape,
+        #     str(width),
+        # )
+        save_folder = os.path.join(
+            script_directory,
+            output_folder,
+            "test",
+            image_shape,
+            str(width),
+        )
+        os.makedirs(save_folder, exist_ok=True)
 
         # Generate logo images for different background colors
         for background_color in BACKGROUND_COLORS:
@@ -407,7 +431,7 @@ if __name__ == "__main__":
                             break
 
                         # Generate and save the logo image with the current combination of colors
-                        LogoImage(
+                        instance = LogoImage(
                             height=height,
                             width=width,
                             logo_size_ratio=logo_size_ratio,
@@ -420,7 +444,14 @@ if __name__ == "__main__":
                             single_line_outline_color=single_line_color,
                             normal_line_body_color=normal_line_color,
                             normal_line_outline_color=normal_line_color,
-                        ).save()
+                        )
+                        instance.save(
+                            os.path.join(
+                                save_folder,
+                                f"{instance.get_info()}.{save_format}",
+                            ),
+                            format=save_format,
+                        )
 
                         # Add the current combination to the history colors
                         history_colors.append(current_combination)
