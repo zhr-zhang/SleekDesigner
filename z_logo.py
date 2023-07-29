@@ -194,8 +194,10 @@ class LogoImage:
 
             # Standard distance used for logo outline
             standard_distance2 = pow(self.Line.standard_distance * self.unit, 2)
-            body_distance2 = pow(self.Line.standard_distance * self.unit - outline_thickness, 2)
-            unit2=pow(self.unit,2)
+            body_distance2 = pow(
+                self.Line.standard_distance * self.unit - outline_thickness, 2
+            )
+            unit2 = pow(self.unit, 2)
             for x in range(self.size):
                 for y in range(self.size):
                     for line in self.lines:
@@ -288,13 +290,15 @@ class LogoImage:
 
             # Draw the circle by iterating over all pixels
             progress_bar = tqdm(total=self.radius * 2, desc="Generating Circle")
+            radius2 = pow(radius, 2)
+            body_distance2 = pow(radius - outline_thickness, 2)
             for x in range(self.radius * 2):
                 for y in range(self.radius * 2):
-                    r = math.sqrt(pow(x - radius, 2) + pow(y - radius, 2))
+                    r2 = pow(x - radius, 2) + pow(y - radius, 2)
 
-                    if r <= radius - outline_thickness:
+                    if r2 <= body_distance2:
                         self.tensor[x, y, :] = body_color
-                    elif r <= radius:
+                    elif r2 <= radius2:
                         self.tensor[x, y, :] = outline_color
                 progress_bar.update(1)
             progress_bar.close()
@@ -374,9 +378,9 @@ if __name__ == "__main__":
     # Generate logo images for different configurations
 
     # Generate logo images for diffetent sizes and shapes
-    for power in range(1):
-        width = 256 * pow(2, power)
-        height = 256 * pow(2, power)
+    for power in range(3):
+        width = 1920 * pow(2, power)
+        height = 1080 * pow(2, power)
 
         # Create a directory to save images with different sizes and shapes
         script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -433,7 +437,7 @@ if __name__ == "__main__":
                             logo_size_ratio=logo_size_ratio,
                             circle_size_ratio=circle_size_ratio,
                             use_round_shape=use_round_shape,
-                            background_color=TRANSPARENT,
+                            background_color=background_color,
                             circle_body_color=circle_color,
                             circle_outline_color=circle_color,
                             single_line_body_color=single_line_color,
