@@ -13,8 +13,8 @@ def main():
     # Set configuration parameters
     logo_size_ratio = 0.7
     circle_size_ratio = 1
-    use_round_shape = True
-    image_shape = "circle"
+    use_round_shape = False
+    image_shape = "wide"
     save_format = "PNG"
 
     # Define the theme colors and background colors for the logo (used in color combinations)
@@ -24,14 +24,14 @@ def main():
     # Generate logo images for different configurations
 
     # Generate logo images for diffetent sizes and shapes
-    for power in range(6):
-        width = 128 * pow(2, power)
-        height = 128 * pow(2, power)
+    for power in range(3):
+        width = 1920 * pow(2, power)
+        height = 1080 * pow(2, power)
 
         # Generate logo images for different background colors
         for background_color in BACKGROUND_COLORS:
             circle_color = background_color
-            corner_color = TRANSPARENT
+            # corner_color = TRANSPARENT
             history_colors = []
             # Create a directory to save images with different sizes and shapes
 
@@ -68,7 +68,16 @@ def main():
                                 repeated = True
                                 break
                         if repeated:
-                            break
+                            continue
+
+                        if (
+                            single_line_color == DARK or normal_line_color == DARK
+                        ) and background_color == BLACK:
+                            continue
+                        if (
+                            single_line_color == LIGHT or normal_line_color == LIGHT
+                        ) and background_color == WHITE:
+                            continue
 
                         # Generate and save the logo image with the current combination of colors
                         instance = LogoImage(
@@ -77,7 +86,7 @@ def main():
                             logo_size_ratio=logo_size_ratio,
                             circle_size_ratio=circle_size_ratio,
                             use_round_shape=use_round_shape,
-                            background_color=corner_color,
+                            background_color=background_color,
                             circle_body_color=circle_color,
                             circle_outline_color=circle_color,
                             single_line_body_color=single_line_color,
