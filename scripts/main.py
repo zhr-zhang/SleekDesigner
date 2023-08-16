@@ -17,12 +17,6 @@ def main():
     image_shape = "wide"
     save_format = "PNG"
 
-    # Define the theme colors and background colors for the logo (used in color combinations)
-    THEME_COLORS = [Z_RED, Z_BLUE, Z_YELLOW]
-    BACKGROUND_COLORS = [BLACK, WHITE, TRANSPARENT]
-
-    # Generate logo images for different configurations
-
     # Generate logo images for diffetent sizes and shapes
     for power in range(3):
         width = 1920 * pow(2, power)
