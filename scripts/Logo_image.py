@@ -1,40 +1,9 @@
-import os
 import numpy as np
 from PIL import Image
 import math
 from tqdm import tqdm
 
-# Define the folder where the generated logo images will be saved
-# Get the directory of the current script
-script_directory = os.path.dirname(os.path.abspath(__file__))
-output_folder = os.path.join(script_directory, "output")
-# Create the output folder if it doesn't exist
-os.makedirs(output_folder, exist_ok=True)
-
-# Define RGBA color constants for easy reference
-# Colors for the logo elements
-Z_RED = (240, 0, 80, 255)
-Z_BLUE = (8, 131, 163, 255)
-Z_YELLOW = (240, 222, 24, 255)
-# Neutral colors for background and lines
-DARK = (15, 15, 15, 255)
-LIGHT = (240, 240, 240, 255)
-WHITE = (255, 255, 255, 255)
-BLACK = (0, 0, 0, 255)
-# Transparent color
-TRANSPARENT = (0, 0, 0, 0)
-
-# Create a color map to associate color constants with human-readable names
-COLOR_MAP = {
-    Z_RED: "zRed",
-    Z_BLUE: "zBlue",
-    Z_YELLOW: "zYellow",
-    DARK: "dark",
-    LIGHT: "light",
-    WHITE: "white",
-    BLACK: "black",
-    TRANSPARENT: "transparent",
-}
+from utils import *
 
 
 # Define a class for generating and customizing the Z logo image
@@ -226,8 +195,7 @@ class LogoImage:
                         )
                         and (not (x_in_logo - y_in_logo > 3 + sqrt2_standard_distance))
                         and (not (x_in_logo - y_in_logo < -3 - sqrt2_standard_distance))
-                    ):  # Reduce the calculation range
-                        # Calculate the distance from the point to each line segment and determine the color of the current pixel
+                    ):
                         for line in self.lines:
                             distance2 = (
                                 line.distance2(
@@ -388,93 +356,3 @@ class LogoImage:
             + COLOR_MAP.get(self.single_line_outline_color, "UNKNOWN")
         )
         return image_info
-
-
-if __name__ == "__main__":
-    # Set configuration parameters
-    # Users can change the values
-    logo_size_ratio = 0.5
-    circle_size_ratio = 1
-    use_round_shape = False
-    image_shape = "wide"
-    save_format = "PNG"
-
-    # Define the theme colors and background colors for the logo (used in color combinations)
-    THEME_COLORS = [Z_RED, Z_BLUE, Z_YELLOW]
-    BACKGROUND_COLORS = [BLACK, WHITE]
-
-    # Generate logo images for different configurations
-
-    # Generate logo images for different sizes and shapes
-    for power in range(3):
-        width = 1920 * pow(2, power)
-        height = 1080 * pow(2, power)
-
-        # Create a directory to save images with different sizes and shapes
-        script_directory = os.path.dirname(os.path.abspath(__file__))
-
-        save_folder = os.path.join(
-            script_directory,
-            output_folder,
-            # "test",
-            image_shape,
-            str(width),
-        )
-        os.makedirs(save_folder, exist_ok=True)
-
-        # Generate logo images for different background colors
-        for background_color in BACKGROUND_COLORS:
-            circle_color = background_color
-            history_colors = []
-
-            # Generate logo images for different theme colors
-            for theme_color in THEME_COLORS:
-                line_colors = [theme_color, LIGHT, DARK]
-
-                # Generate logo images for different single line colors
-                for color1 in line_colors:
-                    single_line_color = color1
-
-                    # Generate logo images for different normal line colors
-                    for color2 in line_colors:
-                        normal_line_color = color2
-
-                        # Skip combinations where the normal line color is the same as the single line color
-                        if normal_line_color == single_line_color:
-                            continue
-
-                        # Check if the current combination has been used before to avoid duplicates
-                        repeated = False
-                        current_combination = [single_line_color, normal_line_color]
-                        for history_color in history_colors:
-                            if current_combination == history_color:
-                                repeated = True
-                                break
-                        if repeated:
-                            break
-
-                        # Generate and save the logo image with the current combination of colors
-                        instance = LogoImage(
-                            height=height,
-                            width=width,
-                            logo_size_ratio=logo_size_ratio,
-                            circle_size_ratio=circle_size_ratio,
-                            use_round_shape=use_round_shape,
-                            background_color=background_color,
-                            circle_body_color=circle_color,
-                            circle_outline_color=circle_color,
-                            single_line_body_color=single_line_color,
-                            single_line_outline_color=single_line_color,
-                            normal_line_body_color=normal_line_color,
-                            normal_line_outline_color=normal_line_color,
-                        )
-                        instance.save(
-                            os.path.join(
-                                save_folder,
-                                f"{instance.get_info()}.{save_format}",
-                            ),
-                            format=save_format,
-                        )
-
-                        # Add the current combination to the history colors
-                        history_colors.append(current_combination)
