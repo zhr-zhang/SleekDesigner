@@ -165,7 +165,7 @@ class LogoImage:
             # Draw the logo by iterating over all pixels
             progress_bar = tqdm(total=self.size, desc="Generating Logo")
 
-            # Standard distance used for logo outline
+            # Pre-calculate variables for the loop
             standard_distance2 = pow(self.Line.standard_distance * self.unit, 2)
             sqrt2_standard_distance = math.sqrt(2) * self.Line.standard_distance
             body_distance2 = pow(
@@ -299,7 +299,6 @@ class LogoImage:
             for x in range(self.radius * 2):
                 for y in range(self.radius * 2):
                     r2 = pow(x - radius, 2) + pow(y - radius, 2)
-
                     if r2 <= body_distance2:
                         self.tensor[x, y, :] = body_color
                     elif r2 <= radius2:
