@@ -1,7 +1,7 @@
 import os
 
 from utils import *
-from Logo_image import LogoImage
+from logo_image import LogoImage
 
 # Define the folder where the generated logo images will be saved
 script_directory = os.path.dirname(os.path.abspath(__file__))
