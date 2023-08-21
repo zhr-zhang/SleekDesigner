@@ -171,15 +171,15 @@ class LogoImage:
             body_distance2 = pow(
                 self.Line.standard_distance * self.unit - outline_thickness, 2
             )
+            # Calculate the square of the distance between the center of the logo and the point
             unit2 = pow(self.unit, 2)
-
-            # Iterate over all pixels in the slice
+            # Iterate through each point in the logo
             for x in range(self.size):
                 for y in range(self.size):
-                    # Transform the coordinates to logo coordinates
+                    # Calculate the distance between the point and the center of the logo
                     x_in_logo = (x - self.size / 2) / self.unit
                     y_in_logo = (y - self.size / 2) / self.unit
-
+                    # Check if the point is within the standard distance of the logo
                     if (
                         (
                             not (
@@ -196,7 +196,9 @@ class LogoImage:
                         and (not (x_in_logo - y_in_logo > 3 + sqrt2_standard_distance))
                         and (not (x_in_logo - y_in_logo < -3 - sqrt2_standard_distance))
                     ):
+                        # Iterate through each line in the logo
                         for line in self.lines:
+                            # Calculate the square of the distance between the point and the line
                             distance2 = (
                                 line.distance2(
                                     x_in_logo,
@@ -204,14 +206,20 @@ class LogoImage:
                                 )
                                 * unit2
                             )
+                            # Check if the square of the distance is less than the body distance
                             if distance2 <= body_distance2:
+                                # Set the color of the point to the body color of the line
                                 self.tensor[x, y, :] = line.body_color
                                 break
+                            # Check if the square of the distance is less than the standard distance
                             elif distance2 <= standard_distance2:
+                                # Set the color of the point to the outline color of the line
                                 self.tensor[x, y, :] = line.outline_color
                                 break
-                progress_bar.update(1)
-            progress_bar.close()
+                    # Update the progress bar
+                    progress_bar.update(1)
+                # Close the progress bar
+                progress_bar.close()
 
         # Nested class for defining the lines used in the logo
         class Line:

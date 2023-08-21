@@ -58,21 +58,25 @@ def main():
                         repeated = False
                         current_combination = [single_line_color, normal_line_color]
                         for history_color in history_colors:
+                            # Check if the current combination is the same as the previous one
                             if current_combination == history_color:
                                 repeated = True
                                 break
+                        # If the combination is not repeated, continue
                         if repeated:
                             continue
 
+                        # If the combination is not black or white, and the background color is black, continue
                         if (
                             single_line_color == DARK or normal_line_color == DARK
                         ) and background_color == BLACK:
                             continue
+                        # If the combination is not light or white, and the background color is white, continue
                         if (
                             single_line_color == LIGHT or normal_line_color == LIGHT
                         ) and background_color == WHITE:
                             continue
-
+                        
                         # Generate and save the logo image with the current combination of colors
                         instance = LogoImage(
                             height=height,
