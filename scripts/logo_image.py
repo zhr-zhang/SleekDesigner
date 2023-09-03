@@ -2,12 +2,34 @@ import numpy as np
 from PIL import Image
 import math
 from tqdm import tqdm
-
+import json
 from utils import *
 
 
 # Define a class for generating and customizing the Z logo image
 class LogoImage:
+    """
+    A class for generating and customizing the Z logo image.
+
+    Attributes:
+        width (int): Width of the image.
+        height (int): Height of the image.
+        use_round_shape (bool): Whether to use a round shape for the logo.
+        logo_size_ratio (float): Ratio of logo size to the smaller dimension of the image.
+        circle_size_ratio (float): Ratio of circle size to the smaller dimension of the image.
+        outline_thickness (float): Thickness of the logo and circle outlines.
+        background_color (tuple): RGBA color tuple for the background color.
+        outside_line_body_color (tuple): RGBA color tuple for the body color of outside lines.
+        outside_line_outline_color (tuple): RGBA color tuple for the outline color of outside lines.
+        inside_line_body_color (tuple): RGBA color tuple for the body color of inside lines.
+        inside_line_outline_color (tuple): RGBA color tuple for the outline color of inside lines.
+        single_line_body_color (tuple): RGBA color tuple for the body color of single line.
+        single_line_outline_color (tuple): RGBA color tuple for the outline color of single line.
+        circle_body_color (tuple): RGBA color tuple for the body color of the circle.
+        circle_outline_color (tuple): RGBA color tuple for the outline color of the circle.
+        result (PIL.Image): The final generated logo image.
+    """
+
     def __init__(
         self,
         width: int = 3840,
@@ -17,8 +39,10 @@ class LogoImage:
         circle_size_ratio: float = 0.6,
         outline_thickness: float = 2,
         background_color=BLACK,
-        normal_line_body_color=LIGHT,
-        normal_line_outline_color=LIGHT,
+        outside_line_body_color=LIGHT,
+        outside_line_outline_color=LIGHT,
+        inside_line_body_color=LIGHT,
+        inside_line_outline_color=LIGHT,
         single_line_body_color=Z_RED,
         single_line_outline_color=Z_RED,
         circle_body_color=DARK,
@@ -35,28 +59,37 @@ class LogoImage:
             circle_size_ratio (float): Ratio of circle size to the smaller dimension of the image.
             outline_thickness (float): Thickness of the logo and circle outlines.
             background_color (tuple): RGBA color tuple for the background color.
-            normal_line_body_color (tuple): RGBA color tuple for normal line body color.
-            normal_line_outline_color (tuple): RGBA color tuple for normal line outline color.
-            single_line_body_color (tuple): RGBA color tuple for single line body color.
-            single_line_outline_color (tuple): RGBA color tuple for single line outline color.
-            circle_body_color (tuple): RGBA color tuple for circle body color.
-            circle_outline_color (tuple): RGBA color tuple for circle outline color.
+            outside_line_body_color (tuple): RGBA color tuple for the body color of outside lines.
+            outside_line_outline_color (tuple): RGBA color tuple for the outline color of outside lines.
+            inside_line_body_color (tuple): RGBA color tuple for the body color of inside lines.
+            inside_line_outline_color (tuple): RGBA color tuple for the outline color of inside lines.
+            single_line_body_color (tuple): RGBA color tuple for the body color of single line.
+            single_line_outline_color (tuple): RGBA color tuple for the outline color of single line.
+            circle_body_color (tuple): RGBA color tuple for the body color of the circle.
+            circle_outline_color (tuple): RGBA color tuple for the outline color of the circle.
         """
         # Initialize customizable attributes based on the provided parameters
-        self.height = int(height)
         self.width = int(width)
+        self.height = int(height)
         self.use_round_shape = use_round_shape
         self.logo_size_ratio = logo_size_ratio
         self.circle_size_ratio = circle_size_ratio
         self.outline_thickness = outline_thickness
-        self.normal_line_body_color = normal_line_body_color
-        self.normal_line_outline_color = normal_line_outline_color
+        self.outside_line_body_color = outside_line_body_color
+        self.outside_line_outline_color = outside_line_outline_color
+        self.inside_line_body_color = inside_line_body_color
+        self.inside_line_outline_color = inside_line_outline_color
         self.single_line_body_color = single_line_body_color
         self.single_line_outline_color = single_line_outline_color
         self.circle_body_color = circle_body_color
         self.circle_outline_color = circle_outline_color
         self.background_color = background_color
+        self.result = None
 
+    def draw(self) -> None:
+        """
+        Draw the image
+        """
         # Generate an information string for file naming
         self.infomation = self.get_info()
 
@@ -65,10 +98,10 @@ class LogoImage:
             (self.width, self.height, 4), self.background_color, dtype=np.uint8
         )
 
-        if use_round_shape:
+        if self.use_round_shape:
             # Draw a circular region in the center of the image
             self.circle_radius = int(
-                min(self.height, self.width) * circle_size_ratio // 2
+                min(self.height, self.width) * self.circle_size_ratio // 2
             )
             circle_start_x = self.width // 2 - self.circle_radius
             circle_end_x = circle_start_x + self.circle_radius * 2
@@ -89,7 +122,7 @@ class LogoImage:
             ).get_circle()
 
         # Place the logo in the center of the image
-        self.logo_size = int(min(self.height, self.width) * logo_size_ratio)
+        self.logo_size = int(min(self.height, self.width) * self.logo_size_ratio)
         logo_start_x = (self.width - self.logo_size) // 2
         logo_end_x = logo_start_x + self.logo_size
         logo_start_y = (self.height - self.logo_size) // 2
@@ -100,8 +133,10 @@ class LogoImage:
             self.Logo(
                 logo_size=self.logo_size,
                 outline_thickness=self.outline_thickness,
-                normal_line_body_color=self.normal_line_body_color,
-                normal_line_outline_color=self.normal_line_outline_color,
+                outside_line_body_color=self.outside_line_body_color,
+                outside_line_outline_color=self.outside_line_outline_color,
+                inside_line_body_color=self.inside_line_body_color,
+                inside_line_outline_color=self.inside_line_outline_color,
                 single_line_body_color=self.single_line_body_color,
                 single_line_outline_color=self.single_line_outline_color,
                 image_slice=self.value[
@@ -115,14 +150,110 @@ class LogoImage:
         # Convert the NumPy array to a PIL Image
         self.result = Image.fromarray(self.value.transpose(1, 0, 2), "RGBA")
 
+    def get_info(self):
+        """
+        Get information about the logo image for file naming.
+
+        Returns:
+            str: Information string for file naming.
+        """
+        image_info = (
+            "z_logo_"
+            + str(self.width)
+            + "_"
+            + str(self.height)
+            + "_"
+            + str(self.logo_size_ratio)
+            + "_"
+            + str(self.circle_size_ratio)
+            + "_"
+            + str(self.outline_thickness)
+            + "_"
+            + COLOR_MAP.get(self.background_color, "UNKNOWN")
+            + "_"
+            + COLOR_MAP.get(self.circle_body_color, "UNKNOWN")
+            + "_"
+            + COLOR_MAP.get(self.circle_outline_color, "UNKNOWN")
+            + "_"
+            + COLOR_MAP.get(self.outside_line_body_color, "UNKNOWN")
+            + "_"
+            + COLOR_MAP.get(self.outside_line_outline_color, "UNKNOWN")
+            + "_"
+            + COLOR_MAP.get(self.inside_line_body_color, "UNKNOWN")
+            + "_"
+            + COLOR_MAP.get(self.inside_line_outline_color, "UNKNOWN")
+            + "_"
+            + COLOR_MAP.get(self.single_line_body_color, "UNKNOWN")
+            + "_"
+            + COLOR_MAP.get(self.single_line_outline_color, "UNKNOWN")
+        )
+        return image_info
+
+    def save_cfg(self, path: str = "cfg.json", mode="W") -> None:
+        """
+        Save the current parameters to a JSON file.
+
+        Parameters:
+            path (str): Path to the JSON file.
+        """
+        # Convert the parameters to a dictionary
+        cfg = {
+            "width": self.width,
+            "height": self.height,
+            "use_round_shape": self.use_round_shape,
+            "logo_size_ratio": self.logo_size_ratio,
+            "circle_size_ratio": self.circle_size_ratio,
+            "outline_thickness": self.outline_thickness,
+            "background_color": self.background_color,
+            "outside_line_body_color": self.outside_line_body_color,
+            "outside_line_outline_color": self.outside_line_outline_color,
+            "inside_line_body_color": self.inside_line_body_color,
+            "inside_line_outline_color": self.inside_line_outline_color,
+            "single_line_body_color": self.single_line_body_color,
+            "single_line_outline_color": self.single_line_outline_color,
+            "circle_body_color": self.circle_body_color,
+            "circle_outline_color": self.circle_outline_color,
+        }
+
+        # Save the dictionary to a JSON file
+        with open(path, mode=mode) as f:
+            json.dump(cfg, f, indent=4)
+
+    def save(self, path, format) -> None:
+        """
+        Save the final image to a file.
+        """
+        self.result.save(path, format=format)
+
+    def get_image(self):
+        """
+        Get the final image.
+
+        Returns:
+            Image: The final image.
+        """
+        return self.result
+
     # Nested class for generating the logo
     class Logo:
+        """
+        A nested class for generating the Z logo.
+
+        Attributes:
+            size (int): Size of the logo.
+            tensor (np.array): NumPy array representing the logo image.
+            unit (float): Unit for scaling logo coordinates.
+            lines (list): List of Line objects defining the logo's lines.
+        """
+
         def __init__(
             self,
             logo_size,
             outline_thickness,
-            normal_line_body_color,
-            normal_line_outline_color,
+            outside_line_body_color,
+            outside_line_outline_color,
+            inside_line_body_color,
+            inside_line_outline_color,
             single_line_body_color,
             single_line_outline_color,
             image_slice,
@@ -132,11 +263,13 @@ class LogoImage:
 
             Parameters:
                 logo_size (int): Size of the logo.
-                outline_thickness (float): Thickness of the logo outlines.
-                normal_line_body_color (tuple): RGBA color tuple for normal line body color.
-                normal_line_outline_color (tuple): RGBA color tuple for normal line outline color.
-                single_line_body_color (tuple): RGBA color tuple for single line body color.
-                single_line_outline_color (tuple): RGBA color tuple for single line outline color.
+                outline_thickness (float): Thickness of the logo outline.
+                outside_line_body_color (tuple): RGBA color tuple for the body color of outside lines.
+                outside_line_outline_color (tuple): RGBA color tuple for the outline color of outside lines.
+                inside_line_body_color (tuple): RGBA color tuple for the body color of inside lines.
+                inside_line_outline_color (tuple): RGBA color tuple for the outline color of inside lines.
+                single_line_body_color (tuple): RGBA color tuple for the body color of single line.
+                single_line_outline_color (tuple): RGBA color tuple for the outline color of single line.
                 image_slice (np.array): Image slice for the logo.
             """
             self.size = logo_size
@@ -146,16 +279,16 @@ class LogoImage:
             # Define the lines for the logo
             self.lines = [
                 self.Line(
-                    (-3, 0), (0, 3), normal_line_body_color, normal_line_outline_color
+                    (-3, 0), (0, 3), outside_line_body_color, outside_line_outline_color
                 ),
                 self.Line(
-                    (3, 0), (0, -3), normal_line_body_color, normal_line_outline_color
+                    (3, 0), (0, -3), outside_line_body_color, outside_line_outline_color
                 ),
                 self.Line(
-                    (-1, 0), (0, 1), normal_line_body_color, normal_line_outline_color
+                    (-1, 0), (0, 1), inside_line_body_color, inside_line_outline_color
                 ),
                 self.Line(
-                    (1, 0), (0, -1), normal_line_body_color, normal_line_outline_color
+                    (1, 0), (0, -1), inside_line_body_color, inside_line_outline_color
                 ),
                 self.Line(
                     (3, 0), (-3, 0), single_line_body_color, single_line_outline_color
@@ -223,6 +356,22 @@ class LogoImage:
 
         # Nested class for defining the lines used in the logo
         class Line:
+            """
+            A nested class for defining the lines used in the Z logo.
+
+            Attributes:
+                body_color (tuple): RGBA color tuple for line body color.
+                outline_color (tuple): RGBA color tuple for line outline color.
+                x1 (float): X-coordinate of the start point of the line.
+                y1 (float): Y-coordinate of the start point of the line.
+                x2 (float): X-coordinate of the end point of the line.
+                y2 (float): Y-coordinate of the end point of the line.
+                A (float): Difference between x2 and x1.
+                B (float): Difference between y2 and y1.
+                C (float): Constant term for the line equation.
+                D (float): Sum of squares of A and B.
+            """
+
             standard_distance = math.sqrt(2) / 4
 
             def __init__(self, a, b, body_color, outline_color) -> None:
@@ -246,14 +395,14 @@ class LogoImage:
 
             def distance2(self, x, y):
                 """
-                Calculate the distance between a point and the line.
+                Calculate the square of the distance between a point and the line.
 
                 Parameters:
                     x (float): X-coordinate of the point.
                     y (float): Y-coordinate of the point.
 
                 Returns:
-                    float: Distance between the point and the line.
+                    float: Square of the distance between the point and the line.
                 """
                 r = (x * self.A + y * self.B + self.C) / self.D
                 if r <= 0:
@@ -314,53 +463,3 @@ class LogoImage:
                 np.array: The generated circle as a NumPy array.
             """
             return self.tensor
-
-    def get_image(self):
-        """
-        Get the final image.
-
-        Returns:
-            Image: The final image.
-        """
-        return self.result
-
-    def save(self, path, format) -> None:
-        """
-        Save the final image to a file.
-        """
-        self.result.save(path, format=format)
-
-    def get_info(self):
-        """
-        Get information about the logo image for file naming.
-
-        Returns:
-            str: Information string for file naming.
-        """
-        image_info = (
-            "z_logo_"
-            + str(self.width)
-            + "_"
-            + str(self.height)
-            + "_"
-            + str(self.logo_size_ratio)
-            + "_"
-            + str(self.circle_size_ratio)
-            + "_"
-            + str(self.outline_thickness)
-            + "_"
-            + COLOR_MAP.get(self.background_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.circle_body_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.circle_outline_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.normal_line_body_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.single_line_body_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.normal_line_outline_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.single_line_outline_color, "UNKNOWN")
-        )
-        return image_info

@@ -1,6 +1,12 @@
 # Output folder
 output/
 
+# cfg folder
+cfg/
+
+# test code
+test.py
+
 # MacOS
 .DS_Store
 **/.DS_Store

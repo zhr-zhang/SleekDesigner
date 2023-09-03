@@ -1,0 +1,50 @@
+{
+    "width": 512,
+    "height": 512,
+    "use_round_shape": true,
+    "logo_size_ratio": 0.7,
+    "circle_size_ratio": 1,
+    "outline_thickness": 2,
+    "background_color": [
+        0,
+        0,
+        0,
+        0
+    ],
+    "normal_line_body_color": [
+        240,
+        222,
+        24,
+        255
+    ],
+    "normal_line_outline_color": [
+        240,
+        222,
+        24,
+        255
+    ],
+    "single_line_body_color": [
+        15,
+        15,
+        15,
+        255
+    ],
+    "single_line_outline_color": [
+        15,
+        15,
+        15,
+        255
+    ],
+    "circle_body_color": [
+        0,
+        0,
+        0,
+        0
+    ],
+    "circle_outline_color": [
+        0,
+        0,
+        0,
+        0
+    ]
+}
