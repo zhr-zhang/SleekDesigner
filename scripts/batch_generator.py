@@ -1,5 +1,5 @@
 from utils import *
-from logo_image import LogoImage
+from image import LogoImage
 
 
 class BaseBatchGenerator:
@@ -78,7 +78,7 @@ class DefaultBatchGenerator(BaseBatchGenerator):
 
                 save_folder = os.path.join(
                     output_folder,
-                    # "test",
+                    "test",
                     self.image_shape,
                     COLOR_MAP.get(background_color, "unknown"),
                     str(width),
