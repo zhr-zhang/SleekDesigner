@@ -1,6 +1,9 @@
 # Output folder
 output/
 
+# notebooks
+notebooks/
+
 # cfg folder
 cfg/
 

@@ -1,20 +1,16 @@
 from utils import *
-from logo_image import LogoImage
-from create import BaseLogoImageBatchGenerator
+from batch_generator import *
 
 if __name__ == "__main__":
-    generator = BaseLogoImageBatchGenerator(draw=True,save=True)
-    generator.generate()
-    # main()
-    # instance = LogoImage(
-    #     outside_line_body_color=Z_BLUE,
-    #     outside_line_outline_color=Z_BLUE,
-    #     inside_line_body_color=Z_RED,
-    #     inside_line_outline_color=Z_RED,
-    #     single_line_body_color=Z_YELLOW,
-    #     single_line_outline_color=Z_YELLOW,
-    #     use_round_shape=True,
-    #     circle_size_ratio=1,
-    # )
-    # instance.draw()
-    # instance.result.show()
+    generator = DefaultBatchGenerator(
+        image_shape="16:9",
+        min_width=1920,
+        min_height=1080,
+        logo_size_ratio=0.5,
+        power_range=range(3,4),
+        use_round_shape=False,
+    )
+    generator.generate(
+        draw=True,
+        save=True,
+    )

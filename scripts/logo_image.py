@@ -349,10 +349,10 @@ class LogoImage:
                                 # Set the color of the point to the outline color of the line
                                 self.tensor[x, y, :] = line.outline_color
                                 break
-                    # Update the progress bar
-                    progress_bar.update(1)
-                # Close the progress bar
-                progress_bar.close()
+                # Update the progress bar
+                progress_bar.update(1)
+            # Close the progress bar
+            progress_bar.close()
 
         # Nested class for defining the lines used in the logo
         class Line:

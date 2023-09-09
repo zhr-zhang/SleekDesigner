@@ -2,7 +2,38 @@ from utils import *
 from logo_image import LogoImage
 
 
-class BaseLogoImageBatchGenerator:
+class BaseBatchGenerator:
+    def __init__(
+        self,
+        logo_size_ratio=0.7,
+        circle_size_ratio=1,
+        use_round_shape=False,
+        image_shape="wide",
+        save_format="PNG",
+        power_range=range(3),
+        min_width=128,
+        min_height=128,
+    ):
+        self.logo_size_ratio = logo_size_ratio
+        self.circle_size_ratio = circle_size_ratio
+        self.use_round_shape = use_round_shape
+        self.image_shape = image_shape
+        self.save_format = save_format
+        self.power_range = power_range
+        self.min_width = min_width
+        self.min_height = min_height
+
+    def generate(
+        self,
+        draw=True,
+        show=False,
+        save=False,
+        save_cfg=False,
+    ):
+        pass
+
+
+class DefaultBatchGenerator(BaseBatchGenerator):
     def __init__(
         self,
         logo_size_ratio=0.7,
@@ -13,33 +44,25 @@ class BaseLogoImageBatchGenerator:
         power_range=range(3),
         min_width=128,
         min_height=128,
+    ):
+        super().__init__(
+            logo_size_ratio,
+            circle_size_ratio,
+            use_round_shape,
+            image_shape,
+            save_format,
+            power_range,
+            min_width,
+            min_height,
+        )
+
+    def generate(
+        self,
         draw=True,
         show=False,
         save=False,
         save_cfg=False,
     ):
-        self.logo_size_ratio = logo_size_ratio
-        self.circle_size_ratio = circle_size_ratio
-        self.use_round_shape = use_round_shape
-        self.image_shape = image_shape
-        self.save_format = save_format
-        self.power_range = power_range
-        self.min_width = min_width
-        self.min_height = min_height
-        self.draw = draw
-        self.show = show
-        self.save = save
-        self.save_cfg = save_cfg
-
-    def generate(self):
-        pass
-
-
-class DefaultLogoImageBatchGenerator(BaseLogoImageBatchGenerator):
-    def __init__(self):
-        super().__init__()
-
-    def generate(self):
         # Generate logo images for diffetent sizes and shapes
         for power in self.power_range:
             width = self.min_width * pow(2, power)
@@ -119,11 +142,11 @@ class DefaultLogoImageBatchGenerator(BaseLogoImageBatchGenerator):
                                 inside_line_body_color=normal_line_color,
                                 inside_line_outline_color=normal_line_color,
                             )
-                            if self.draw:
+                            if draw:
                                 instance.draw()
-                            if self.show:
+                            if show:
                                 instance.result.show()
-                            if self.save:
+                            if save:
                                 instance.save(
                                     path=os.path.join(
                                         save_folder,
@@ -131,7 +154,7 @@ class DefaultLogoImageBatchGenerator(BaseLogoImageBatchGenerator):
                                     ),
                                     format=self.save_format,
                                 )
-                            if self.save_cfg:
+                            if save_cfg:
                                 instance.save_cfg(
                                     path=os.path.join(
                                         cfg_folder, f"{instance.get_info()}.cfg"
@@ -142,8 +165,29 @@ class DefaultLogoImageBatchGenerator(BaseLogoImageBatchGenerator):
                             # Add the current combination to the history colors
                             history_colors.append(current_combination)
 
-class CustomLogoImageBatchGenerator(BaseLogoImageBatchGenerator):
-    def __init__(self):
-        super().__init__()
-    def generate(self):
-        return super().generate()
+
+class CustomBatchGenerator(BaseBatchGenerator):
+    def __init__(
+        self,
+        logo_size_ratio=0.7,
+        circle_size_ratio=1,
+        use_round_shape=False,
+        image_shape="wide",
+        save_format="PNG",
+        power_range=range(3),
+        min_width=128,
+        min_height=128,
+    ):
+        super().__init__(
+            logo_size_ratio,
+            circle_size_ratio,
+            use_round_shape,
+            image_shape,
+            save_format,
+            power_range,
+            min_width,
+            min_height,
+        )
+
+    def generate(self, draw=True, show=False, save=False, save_cfg=False):
+        return super().generate(draw, show, save, save_cfg)
