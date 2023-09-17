@@ -1,6 +1,15 @@
 # Output folder
 output/
 
+# notebooks
+notebooks/
+
+# cfg folder
+cfg/
+
+# test code
+test.py
+
 # MacOS
 .DS_Store
 **/.DS_Store
