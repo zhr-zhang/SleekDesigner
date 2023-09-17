@@ -1,9 +1,7 @@
 import numpy as np
 from PIL import Image
-from tqdm import tqdm
 import json
 from logo import Logo
-from circle import Circle
 from utils import *
 
 
@@ -11,24 +9,6 @@ from utils import *
 class LogoImage:
     """
     A class for generating and customizing the Z logo image.
-
-    Attributes:
-        width (int): Width of the image.
-        height (int): Height of the image.
-        use_round_shape (bool): Whether to use a round shape for the logo.
-        logo_size_ratio (float): Ratio of logo size to the smaller dimension of the image.
-        circle_size_ratio (float): Ratio of circle size to the smaller dimension of the image.
-        outline_thickness (float): Thickness of the logo and circle outlines.
-        background_color (tuple): RGBA color tuple for the background color.
-        outside_line_body_color (tuple): RGBA color tuple for the body color of outside lines.
-        outside_line_outline_color (tuple): RGBA color tuple for the outline color of outside lines.
-        inside_line_body_color (tuple): RGBA color tuple for the body color of inside lines.
-        inside_line_outline_color (tuple): RGBA color tuple for the outline color of inside lines.
-        single_line_body_color (tuple): RGBA color tuple for the body color of single line.
-        single_line_outline_color (tuple): RGBA color tuple for the outline color of single line.
-        circle_body_color (tuple): RGBA color tuple for the body color of the circle.
-        circle_outline_color (tuple): RGBA color tuple for the outline color of the circle.
-        result (PIL.Image): The final generated logo image.
     """
 
     def __init__(
@@ -50,24 +30,7 @@ class LogoImage:
         circle_outline_color=DARK,
     ) -> None:
         """
-        Initialize the LogoImage class with various customizable parameters.
-
-        Parameters:
-            width (int): Width of the image.
-            height (int): Height of the image.
-            use_round_shape (bool): Whether to use a round shape for the logo.
-            logo_size_ratio (float): Ratio of logo size to the smaller dimension of the image.
-            circle_size_ratio (float): Ratio of circle size to the smaller dimension of the image.
-            outline_thickness (float): Thickness of the logo and circle outlines.
-            background_color (tuple): RGBA color tuple for the background color.
-            outside_line_body_color (tuple): RGBA color tuple for the body color of outside lines.
-            outside_line_outline_color (tuple): RGBA color tuple for the outline color of outside lines.
-            inside_line_body_color (tuple): RGBA color tuple for the body color of inside lines.
-            inside_line_outline_color (tuple): RGBA color tuple for the outline color of inside lines.
-            single_line_body_color (tuple): RGBA color tuple for the body color of single line.
-            single_line_outline_color (tuple): RGBA color tuple for the outline color of single line.
-            circle_body_color (tuple): RGBA color tuple for the body color of the circle.
-            circle_outline_color (tuple): RGBA color tuple for the outline color of the circle.
+        Initialize the LogoImage class with various customi
         """
         # Initialize customizable attributes based on the provided parameters
         self.width = int(width)
@@ -99,29 +62,6 @@ class LogoImage:
             (self.width, self.height, 4), self.background_color, dtype=np.uint8
         )
 
-        if self.use_round_shape:
-            # Draw a circular region in the center of the image
-            self.circle_radius = int(
-                min(self.height, self.width) * self.circle_size_ratio // 2
-            )
-            circle_start_x = self.width // 2 - self.circle_radius
-            circle_end_x = circle_start_x + self.circle_radius * 2
-            circle_start_y = self.height // 2 - self.circle_radius
-            circle_end_y = circle_start_y + self.circle_radius * 2
-
-            # Generate the circle image with specified colors and outline thickness
-            self.value[
-                circle_start_x:circle_end_x, circle_start_y:circle_end_y
-            ] = Circle(
-                radius=self.circle_radius,
-                outline_thickness=self.outline_thickness,
-                body_color=self.circle_body_color,
-                outline_color=self.circle_outline_color,
-                image_slice=self.value[
-                    circle_start_x:circle_end_x, circle_start_y:circle_end_y
-                ],
-            ).get_circle()
-
         # Place the logo in the center of the image
         self.logo_size = int(min(self.height, self.width) * self.logo_size_ratio)
         logo_start_x = (self.width - self.logo_size) // 2
@@ -149,7 +89,7 @@ class LogoImage:
         )
 
         # Convert the NumPy array to a PIL Image
-        self.result = Image.fromarray(self.value.transpose(1, 0, 2), "RGBA")
+        self.result = Image.fromarray(self.value, "RGBA")
 
     def get_info(self):
         """
@@ -234,6 +174,3 @@ class LogoImage:
             Image: The final image.
         """
         return self.result
-
-   
-

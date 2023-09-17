@@ -3,7 +3,12 @@ from tqdm import tqdm
 
 class Circle:
     def __init__(
-        self, radius, outline_thickness, body_color, outline_color, image_slice
+        self,
+        radius,
+        outline_thickness,
+        body_color,
+        outline_color,
+        image_slice,
     ) -> None:
         """
         Initialize the Circle class for generating the circular region.
