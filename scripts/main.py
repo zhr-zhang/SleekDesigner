@@ -1,16 +1,17 @@
-from batch_generator import DefaultBatchGenerator
-
+from batch_generator import BaseBatchGenerator
+from image import LogoImage
+from utils import *
+import math
 
 if __name__ == "__main__":
-    generator = DefaultBatchGenerator(
-        image_shape="square",
-        min_width=512,
-        min_height=512,
-        logo_size_ratio=0.7,
-        power_range=range(1),
-        use_round_shape=False,
+    picture = LogoImage(
+        width=512,
+        height=512,
+        logo_size_ratio=1.0,
+        angle=0 * math.pi / 180,
     )
-    generator.generate(
-        draw=True,
-        save=True,
+    picture.draw()
+    picture.save(
+        path=f"{os.path.join(output_folder,'test',picture.get_info())}.png",
+        format="png",
     )

@@ -1,7 +1,7 @@
-from stripe import Stripe
+from figure import Figure
 
 
-class Line(Stripe):
+class Line(Figure):
     """
     A nested class for defining the lines used in the Z logo.
     """
@@ -18,19 +18,16 @@ class Line(Stripe):
         self.C = -self.x1 * self.A - self.y1 * self.B
         self.D = pow(self.A, 2) + pow(self.B, 2)
 
-    def distance2(self, x, y):
+    def distance2(self, xp, yp):
         """
         Calculate the square of the distance between a point and the line.
-
-        Returns:
-            float: Square of the distance between the point and the line.
         """
-        r = (x * self.A + y * self.B + self.C) / self.D
+        r = (xp * self.A + yp * self.B + self.C) / self.D
         if r <= 0:
-            return pow(x - self.x1, 2) + pow(y - self.y1, 2)
+            return pow(xp - self.x1, 2) + pow(yp - self.y1, 2)
         elif r >= 1:
-            return pow(x - self.x2, 2) + pow(y - self.y2, 2)
+            return pow(xp - self.x2, 2) + pow(yp - self.y2, 2)
         else:
             xc = self.x1 + r * self.A
             yc = self.y1 + r * self.B
-            return pow(x - xc, 2) + pow(y - yc, 2)
+            return pow(xp - xc, 2) + pow(yp - yc, 2)
