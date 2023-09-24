@@ -16,7 +16,7 @@ class LogoImage:
         self,
         width: int = 3840,
         height: int = 2160,
-        angle=math.pi/4,
+        angle_degrees=math.pi/4,
         logo_size_ratio: float = 0.5,
         outline_thickness: float = 2,
         background_color=BLACK,
@@ -34,7 +34,7 @@ class LogoImage:
         self.width = int(width)
         self.height = int(height)
         self.logo_size_ratio = logo_size_ratio
-        self.angle=angle
+        self.angle_degrees=angle_degrees
         self.outline_thickness = outline_thickness
         self.background_color = background_color
         self.outside_line_body_color = outside_line_body_color
@@ -64,7 +64,7 @@ class LogoImage:
         self.value[logo_start_x:logo_end_x, logo_start_y:logo_end_y] = (
             Logo(
                 logo_size=self.logo_size,
-                angle=self.angle,
+                angle_degrees=self.angle_degrees,
                 outline_thickness=self.outline_thickness,
                 outside_line_body_color=self.outside_line_body_color,
                 outside_line_outline_color=self.outside_line_outline_color,

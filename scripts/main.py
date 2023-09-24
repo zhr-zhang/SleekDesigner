@@ -1,17 +1,13 @@
-from batch_generator import BaseBatchGenerator
-from image import LogoImage
+from video_generator import VideoGenerator
 from utils import *
-import math
+import os
 
 if __name__ == "__main__":
-    picture = LogoImage(
+    generator = VideoGenerator(
+        time_seconds=5,
+        degree_per_second=10,
+        logo_size_ratio=0.5,
         width=512,
         height=512,
-        logo_size_ratio=1.0,
-        angle=0 * math.pi / 180,
     )
-    picture.draw()
-    picture.save(
-        path=f"{os.path.join(output_folder,'test',picture.get_info())}.png",
-        format="png",
-    )
+    generator.generate()

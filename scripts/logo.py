@@ -8,7 +8,7 @@ class Logo:
     def __init__(
         self,
         logo_size,
-        angle,
+        angle_degrees,
         outline_thickness,
         outside_line_body_color,
         outside_line_outline_color,
@@ -21,6 +21,7 @@ class Logo:
         self.size = logo_size
         self.tensor = image_slice
         self.unit = self.size / (4 * math.sqrt(34) + 2)
+        angle=angle_degrees*math.pi/180
 
         # Define the figures for the logo
         self.figures = [
