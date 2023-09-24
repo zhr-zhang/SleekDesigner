@@ -12,7 +12,6 @@ class VideoGenerator:
         self,
         logo_size_ratio=0.7,
         filename="wide1080",
-        save_format="PNG",
         width=1920,
         height=1080,
         outline_thickness: float = 2,
@@ -23,13 +22,14 @@ class VideoGenerator:
         inside_line_outline_color=LIGHT,
         single_line_body_color=Z_RED,
         single_line_outline_color=Z_RED,
+        arc_body_color=Z_RED,
+        arc_outline_color=Z_RED,
         start_angle_degrees=0,
         degree_per_second=45,
         frame_frequency=30,
         time_seconds=5,
     ):
         self.logo_size_ratio = logo_size_ratio
-        self.save_format = save_format
         self.width = width
         self.height = height
         self.filename = filename
@@ -41,6 +41,9 @@ class VideoGenerator:
         self.inside_line_outline_color = inside_line_outline_color
         self.single_line_body_color = single_line_body_color
         self.single_line_outline_color = single_line_outline_color
+        self.arc_body_color = arc_body_color
+        self.arc_outline_color = arc_outline_color
+        
         self.start_angle_degrees = start_angle_degrees
         self.degree_per_second = degree_per_second
         self.frame_frequency = frame_frequency
@@ -72,19 +75,18 @@ class VideoGenerator:
                 inside_line_outline_color=self.inside_line_outline_color,
                 single_line_body_color=self.single_line_body_color,
                 single_line_outline_color=self.single_line_outline_color,
+                arc_body_color=self.arc_body_color,
+                arc_outline_color=self.arc_outline_color,
             )
             frame.draw()
             frame_path = os.path.join(frame_folder, f"{i:06d}.png")
             frame.save(frame_path, format="png")
-            frames.append(np.array(Image.open(frame_path)))  # 转换为numpy数组并将帧添加到frames列表
+            frames.append(np.array(Image.open(frame_path)))
             present_angle_degree += angle_degree_per_frame
             processing_bar.update(1)
         processing_bar.close()
 
-        # 使用保存的帧图像合成视频，指定无损编解码器为'png'
         clip = ImageSequenceClip(frames, fps=self.frame_frequency)
-
-        # 保存无损视频到指定路径，使用H.264编解码器并设置质量参数为无损
         output_path = os.path.join(self.save_folder, f"{self.filename}.mp4")
         clip.write_videofile(output_path, codec='libx264', fps=self.frame_frequency, preset='ultrafast', ffmpeg_params=['-crf', '0'])
 

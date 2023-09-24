@@ -16,6 +16,8 @@ class Logo:
         inside_line_outline_color,
         single_line_body_color,
         single_line_outline_color,
+        arc_body_color,
+        arc_outline_color,
         image_slice,
     ) -> None:
         self.size = logo_size
@@ -59,29 +61,29 @@ class Logo:
                 center=(0, 0),
                 a=(10, -6),
                 b=(10, 6),
-                body_color=single_line_body_color,
-                outline_color=single_line_outline_color,
+                body_color=arc_body_color,
+                outline_color=arc_outline_color,
             ),
             Arc(
                 center=(0, 0),
                 a=(-10, 6),
                 b=(-10, -6),
-                body_color=single_line_body_color,
-                outline_color=single_line_outline_color,
+                body_color=arc_body_color,
+                outline_color=arc_outline_color,
             ),
             Arc(
                 center=(0, 0),
                 a=(6, 10),
                 b=(-6, 10),
-                body_color=single_line_body_color,
-                outline_color=single_line_outline_color,
+                body_color=arc_body_color,
+                outline_color=arc_outline_color,
             ),
             Arc(
                 center=(0, 0),
                 a=(-6, -10),
                 b=(6, -10),
-                body_color=single_line_body_color,
-                outline_color=single_line_outline_color,
+                body_color=arc_body_color,
+                outline_color=arc_outline_color,
             ),
         ]
 

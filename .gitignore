@@ -10,6 +10,9 @@ cfg/
 # test code
 test.py
 
+# user code
+user.py
+
 # MacOS
 .DS_Store
 **/.DS_Store

@@ -1,6 +1,7 @@
 from utils import *
 from image import LogoImage
 
+
 class BaseBatchGenerator:
     def __init__(
         self,
@@ -56,66 +57,44 @@ class DefaultBatchGenerator(BaseBatchGenerator):
         save=False,
         save_cfg=False,
     ):
-        # Generate logo images for diffetent sizes and shapes
         for power in self.power_range:
             width = self.min_width * pow(2, power)
             height = self.min_height * pow(2, power)
-
-            # Generate logo images for different background colors
             for background_color in BACKGROUND_COLORS:
-                # corner_color = TRANSPARENT
                 history_colors = []
-                # Create a directory to save images with different sizes and shapes
-
                 save_folder = os.path.join(
                     output_folder,
+                    "batch_generate_images",
                     # "test",
                     self.image_shape,
                     COLOR_MAP.get(background_color, "unknown"),
                     str(width),
                 )
                 os.makedirs(save_folder, exist_ok=True)
-
-                # Generate logo images for different theme colors
                 for theme_color in THEME_COLORS:
                     line_colors = [theme_color, LIGHT, DARK]
-
-                    # Generate logo images for different single line colors
                     for color1 in line_colors:
                         single_line_color = color1
-
-                        # Generate logo images for different normal line colors
                         for color2 in line_colors:
                             normal_line_color = color2
-
-                            # Skip combinations where the normal line color is the same as the single line color
                             if normal_line_color == single_line_color:
                                 continue
-
-                            # Check if the current combination has been used before to avoid duplicates
                             repeated = False
                             current_combination = [single_line_color, normal_line_color]
                             for history_color in history_colors:
-                                # Check if the current combination is the same as the previous one
                                 if current_combination == history_color:
                                     repeated = True
                                     break
-                            # If the combination is not repeated, continue
                             if repeated:
                                 continue
-
-                            # If the combination is not black or white, and the background color is black, continue
                             if (
                                 single_line_color == DARK or normal_line_color == DARK
                             ) and background_color == BLACK:
                                 continue
-                            # If the combination is not light or white, and the background color is white, continue
                             if (
                                 single_line_color == LIGHT or normal_line_color == LIGHT
                             ) and background_color == WHITE:
                                 continue
-
-                            # Generate and save the logo image with the current combination of colors
                             instance = LogoImage(
                                 width=width,
                                 height=height,
@@ -128,6 +107,7 @@ class DefaultBatchGenerator(BaseBatchGenerator):
                                 outside_line_outline_color=normal_line_color,
                                 inside_line_body_color=normal_line_color,
                                 inside_line_outline_color=normal_line_color,
+                                
                             )
                             if draw:
                                 instance.draw()
@@ -148,8 +128,4 @@ class DefaultBatchGenerator(BaseBatchGenerator):
                                     ),
                                     mode="a",
                                 )
-
-                            # Add the current combination to the history colors
                             history_colors.append(current_combination)
-
-
