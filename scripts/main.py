@@ -1,16 +1,13 @@
-from batch_generator import DefaultBatchGenerator
-
+from video_generator import VideoGenerator
+from utils import *
+import os
 
 if __name__ == "__main__":
-    generator = DefaultBatchGenerator(
-        image_shape="square",
-        min_width=512,
-        min_height=512,
-        logo_size_ratio=0.7,
-        power_range=range(1),
-        use_round_shape=False,
+    generator = VideoGenerator(
+        time_seconds=5,
+        degree_per_second=10,
+        logo_size_ratio=0.5,
+        width=512,
+        height=512,
     )
-    generator.generate(
-        draw=True,
-        save=True,
-    )
+    generator.generate()

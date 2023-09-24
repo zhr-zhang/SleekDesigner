@@ -1,13 +1,10 @@
 from utils import *
 from image import LogoImage
 
-
 class BaseBatchGenerator:
     def __init__(
         self,
         logo_size_ratio=0.7,
-        circle_size_ratio=1,
-        use_round_shape=False,
         image_shape="wide",
         save_format="PNG",
         power_range=range(3),
@@ -15,8 +12,6 @@ class BaseBatchGenerator:
         min_height=128,
     ):
         self.logo_size_ratio = logo_size_ratio
-        self.circle_size_ratio = circle_size_ratio
-        self.use_round_shape = use_round_shape
         self.image_shape = image_shape
         self.save_format = save_format
         self.power_range = power_range
@@ -37,24 +32,22 @@ class DefaultBatchGenerator(BaseBatchGenerator):
     def __init__(
         self,
         logo_size_ratio=0.7,
-        circle_size_ratio=1,
-        use_round_shape=True,
         image_shape="wide",
         save_format="PNG",
         power_range=range(3),
         min_width=128,
         min_height=128,
+        angle_degrees=45,
     ):
         super().__init__(
             logo_size_ratio,
-            circle_size_ratio,
-            use_round_shape,
             image_shape,
             save_format,
             power_range,
             min_width,
             min_height,
         )
+        self.angle_degrees = angle_degrees
 
     def generate(
         self,
@@ -70,15 +63,13 @@ class DefaultBatchGenerator(BaseBatchGenerator):
 
             # Generate logo images for different background colors
             for background_color in BACKGROUND_COLORS:
-                # if not self.use_round_shape:
-                circle_color = background_color
                 # corner_color = TRANSPARENT
                 history_colors = []
                 # Create a directory to save images with different sizes and shapes
 
                 save_folder = os.path.join(
                     output_folder,
-                    "test",
+                    # "test",
                     self.image_shape,
                     COLOR_MAP.get(background_color, "unknown"),
                     str(width),
@@ -129,12 +120,8 @@ class DefaultBatchGenerator(BaseBatchGenerator):
                                 width=width,
                                 height=height,
                                 logo_size_ratio=self.logo_size_ratio,
-                                circle_size_ratio=self.circle_size_ratio,
-                                use_round_shape=self.use_round_shape,
+                                angle_degrees=self.angle_degrees,
                                 background_color=background_color,
-                                # background_color=corner_color,
-                                circle_body_color=circle_color,
-                                circle_outline_color=circle_color,
                                 single_line_body_color=single_line_color,
                                 single_line_outline_color=single_line_color,
                                 outside_line_body_color=normal_line_color,
@@ -166,28 +153,3 @@ class DefaultBatchGenerator(BaseBatchGenerator):
                             history_colors.append(current_combination)
 
 
-class CustomBatchGenerator(BaseBatchGenerator):
-    def __init__(
-        self,
-        logo_size_ratio=0.7,
-        circle_size_ratio=1,
-        use_round_shape=False,
-        image_shape="wide",
-        save_format="PNG",
-        power_range=range(3),
-        min_width=128,
-        min_height=128,
-    ):
-        super().__init__(
-            logo_size_ratio,
-            circle_size_ratio,
-            use_round_shape,
-            image_shape,
-            save_format,
-            power_range,
-            min_width,
-            min_height,
-        )
-
-    def generate(self, draw=True, show=False, save=False, save_cfg=False):
-        return super().generate(draw, show, save, save_cfg)
