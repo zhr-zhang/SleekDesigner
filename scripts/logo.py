@@ -1,7 +1,5 @@
 import math
-from line import Line
-from figure import Figure
-from arc import Arc
+from figure import Figure, Line, Arc
 
 
 class Logo:
