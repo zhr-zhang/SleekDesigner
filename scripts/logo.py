@@ -21,7 +21,7 @@ class Logo:
         self.size = logo_size
         self.tensor = image_slice
         self.unit = self.size / (4 * math.sqrt(34) + 2)
-        angle=angle_degrees*math.pi/180
+        angle_arc = angle_degrees * math.pi / 180
 
         # Define the figures for the logo
         self.figures = [
@@ -94,8 +94,8 @@ class Logo:
             for y in range(self.size):
                 m = (x - self.size / 2) / self.unit
                 n = (y - self.size / 2) / self.unit
-                x_in_logo = m * math.cos(angle) + n * math.sin(angle)
-                y_in_logo = -m * math.sin(angle) + n * math.cos(angle)
+                x_in_logo = m * math.cos(angle_arc) + n * math.sin(angle_arc)
+                y_in_logo = -m * math.sin(angle_arc) + n * math.cos(angle_arc)
                 for figure in self.figures:
                     distance2 = figure.distance2(x_in_logo, y_in_logo) * unit2
                     if distance2 <= body_distance2:
