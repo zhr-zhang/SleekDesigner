@@ -24,10 +24,10 @@ class LogoImage:
         outside_line_outline_color=LIGHT,
         inside_line_body_color=LIGHT,
         inside_line_outline_color=LIGHT,
-        single_line_body_color=Z_RED,
-        single_line_outline_color=Z_RED,
-        arc_body_color=Z_RED,
-        arc_outline_color=Z_RED,
+        single_line_body_color=RED,
+        single_line_outline_color=RED,
+        arc_body_color=RED,
+        arc_outline_color=RED,
     ) -> None:
         """
         Initialize the LogoImage class with various customi
