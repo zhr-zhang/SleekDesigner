@@ -128,10 +128,10 @@ class Function:
                             history_colors.append(current_combination)
 
     def generate_video(
-        logo_size_ratio=0.7,
+        logo_size_ratio=0.5,
         filename="wide1080",
-        width=1920,
-        height=1080,
+        width: int = 1920,
+        height: int = 1080,
         outline_thickness: float = 2,
         background_color=BLACK,
         outside_line_body_color=LIGHT,
@@ -145,7 +145,7 @@ class Function:
         start_angle_degrees=45,
         degree_per_second=45,
         frame_frequency=30,
-        time_seconds=5,
+        time_seconds=4,
     ):
         save_folder = os.path.join(output_folder, "video")
         os.makedirs(save_folder, exist_ok=True)
@@ -157,7 +157,7 @@ class Function:
         os.makedirs(frame_folder, exist_ok=True)
 
         frames = []
-        processing_bar = tqdm(total=num_frames, desc="Generating frames", unit="frames")
+        progress_bar = tqdm(total=num_frames, desc="Generating frames", unit="frames")
         for i in range(num_frames):
             present_angle_degree = start_angle_degrees + i * angle_degree_per_frame
             frame = LogoImage(
@@ -180,8 +180,8 @@ class Function:
             frame_path = os.path.join(frame_folder, f"{i:06d}.png")
             frame.save(frame_path, format="png")
             frames.append(np.array(Image.open(frame_path)))
-            processing_bar.update(1)
-        processing_bar.close()
+            progress_bar.update(1)
+        progress_bar.close()
 
         clip = ImageSequenceClip(frames, fps=frame_frequency)
         output_path = os.path.join(save_folder, f"{filename}.mp4")
