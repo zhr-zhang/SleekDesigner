@@ -7,8 +7,6 @@ import numpy as np
 
 
 def generate_single_logo():
-    from image import LogoImage
-
     filename = "logo.png"
     save_folder = os.path.join(output_folder, "single_logo")
     os.makedirs(save_folder, exist_ok=True)
@@ -95,6 +93,8 @@ def batch_generate_logo(
                             outside_line_outline_color=normal_line_color,
                             inside_line_body_color=normal_line_color,
                             inside_line_outline_color=normal_line_color,
+                            arc_body_color=single_line_color,
+                            arc_outline_color=single_line_color,
                         )
                         if draw:
                             instance.draw()
@@ -118,71 +118,70 @@ def batch_generate_logo(
                         history_colors.append(current_combination)
 
 
-class VideoGenerator:
-    def __init__(
-        logo_size_ratio=0.7,
-        filename="wide1080",
-        width=1920,
-        height=1080,
-        outline_thickness: float = 2,
-        background_color=BLACK,
-        outside_line_body_color=LIGHT,
-        outside_line_outline_color=LIGHT,
-        inside_line_body_color=LIGHT,
-        inside_line_outline_color=LIGHT,
-        single_line_body_color=Z_RED,
-        single_line_outline_color=Z_RED,
-        arc_body_color=Z_RED,
-        arc_outline_color=Z_RED,
-        start_angle_degrees=45,
-        degree_per_second=45,
-        frame_frequency=30,
-        time_seconds=5,
-    ):
-        save_folder = os.path.join(output_folder, "video")
-        os.makedirs(save_folder, exist_ok=True)
+def generate_video(
+    logo_size_ratio=0.7,
+    filename="wide1080",
+    width=1920,
+    height=1080,
+    outline_thickness: float = 2,
+    background_color=BLACK,
+    outside_line_body_color=LIGHT,
+    outside_line_outline_color=LIGHT,
+    inside_line_body_color=LIGHT,
+    inside_line_outline_color=LIGHT,
+    single_line_body_color=Z_RED,
+    single_line_outline_color=Z_RED,
+    arc_body_color=Z_RED,
+    arc_outline_color=Z_RED,
+    start_angle_degrees=45,
+    degree_per_second=45,
+    frame_frequency=30,
+    time_seconds=5,
+):
+    save_folder = os.path.join(output_folder, "video")
+    os.makedirs(save_folder, exist_ok=True)
 
-        num_frames = time_seconds * frame_frequency
-        angle_degree_per_frame = degree_per_second / frame_frequency
+    num_frames = time_seconds * frame_frequency
+    angle_degree_per_frame = degree_per_second / frame_frequency
 
-        frame_folder = os.path.join(save_folder, "frames")
-        os.makedirs(frame_folder, exist_ok=True)
+    frame_folder = os.path.join(save_folder, "frames")
+    os.makedirs(frame_folder, exist_ok=True)
 
-        frames = []
-        processing_bar = tqdm(total=num_frames, desc="Generating frames", unit="frames")
-        for i in range(num_frames):
-            present_angle_degree = start_angle_degrees + i * angle_degree_per_frame
-            frame = LogoImage(
-                width=width,
-                height=height,
-                logo_size_ratio=logo_size_ratio,
-                angle_degrees=present_angle_degree,
-                outline_thickness=outline_thickness,
-                background_color=background_color,
-                outside_line_body_color=outside_line_body_color,
-                outside_line_outline_color=outside_line_outline_color,
-                inside_line_body_color=inside_line_body_color,
-                inside_line_outline_color=inside_line_outline_color,
-                single_line_body_color=single_line_body_color,
-                single_line_outline_color=single_line_outline_color,
-                arc_body_color=arc_body_color,
-                arc_outline_color=arc_outline_color,
-            )
-            frame.draw()
-            frame_path = os.path.join(frame_folder, f"{i:06d}.png")
-            frame.save(frame_path, format="png")
-            frames.append(np.array(Image.open(frame_path)))
-            processing_bar.update(1)
-        processing_bar.close()
-
-        clip = ImageSequenceClip(frames, fps=frame_frequency)
-        output_path = os.path.join(save_folder, f"{filename}.mp4")
-        clip.write_videofile(
-            output_path,
-            codec="libx264",
-            fps=frame_frequency,
-            preset="ultrafast",
-            ffmpeg_params=["-crf", "0"],
+    frames = []
+    processing_bar = tqdm(total=num_frames, desc="Generating frames", unit="frames")
+    for i in range(num_frames):
+        present_angle_degree = start_angle_degrees + i * angle_degree_per_frame
+        frame = LogoImage(
+            width=width,
+            height=height,
+            logo_size_ratio=logo_size_ratio,
+            angle_degrees=present_angle_degree,
+            outline_thickness=outline_thickness,
+            background_color=background_color,
+            outside_line_body_color=outside_line_body_color,
+            outside_line_outline_color=outside_line_outline_color,
+            inside_line_body_color=inside_line_body_color,
+            inside_line_outline_color=inside_line_outline_color,
+            single_line_body_color=single_line_body_color,
+            single_line_outline_color=single_line_outline_color,
+            arc_body_color=arc_body_color,
+            arc_outline_color=arc_outline_color,
         )
+        frame.draw()
+        frame_path = os.path.join(frame_folder, f"{i:06d}.png")
+        frame.save(frame_path, format="png")
+        frames.append(np.array(Image.open(frame_path)))
+        processing_bar.update(1)
+    processing_bar.close()
 
-        print(f"无损视频已创建：{output_path}")
+    clip = ImageSequenceClip(frames, fps=frame_frequency)
+    output_path = os.path.join(save_folder, f"{filename}.mp4")
+    clip.write_videofile(
+        output_path,
+        codec="libx264",
+        fps=frame_frequency,
+        preset="ultrafast",
+        ffmpeg_params=["-crf", "0"],
+    )
+
+    print(f"无损视频已创建：{output_path}")
