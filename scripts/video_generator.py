@@ -54,7 +54,6 @@ class VideoGenerator:
     def generate(self):
         num_frames = self.time_seconds * self.frame_frequency
         angle_degree_per_frame = self.degree_per_second / self.frame_frequency
-        present_angle_degree = self.start_angle_degrees
 
         frame_folder = os.path.join(self.save_folder, "frames")
         os.makedirs(frame_folder, exist_ok=True)
@@ -62,6 +61,7 @@ class VideoGenerator:
         frames = []
         processing_bar = tqdm(total=num_frames, desc="Generating frames", unit="frames")
         for i in range(num_frames):
+            present_angle_degree = self.start_angle_degrees + i * angle_degree_per_frame
             frame = LogoImage(
                 width=self.width,
                 height=self.height,
@@ -82,7 +82,6 @@ class VideoGenerator:
             frame_path = os.path.join(frame_folder, f"{i:06d}.png")
             frame.save(frame_path, format="png")
             frames.append(np.array(Image.open(frame_path)))
-            present_angle_degree += angle_degree_per_frame
             processing_bar.update(1)
         processing_bar.close()
 
