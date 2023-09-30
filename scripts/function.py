@@ -42,7 +42,7 @@ class Function:
         image.save(path=os.path.join(save_folder, filename), format="png")
 
     def batch_generate_logo(
-        logo_size_ratio=0.7,
+        logo_size_ratio=0.5,
         image_shape="wide",
         save_format="png",
         power_range=range(3),
