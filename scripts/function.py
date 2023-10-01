@@ -7,6 +7,7 @@ import numpy as np
 
 
 class Function:
+    @staticmethod
     def generate_single_logo(
         width=3840,
         height=2160,
@@ -41,6 +42,7 @@ class Function:
         image.draw()
         image.save(path=os.path.join(save_folder, filename), format="png")
 
+    @staticmethod
     def batch_generate_logo(
         logo_size_ratio=0.5,
         image_shape="wide",
@@ -51,7 +53,7 @@ class Function:
         angle_degrees=45,
         draw=True,
         show=False,
-        save=False,
+        save=True,
         save_cfg=False,
     ):
         for power in power_range:
@@ -127,6 +129,7 @@ class Function:
                                 )
                             history_colors.append(current_combination)
 
+    @staticmethod
     def generate_video(
         logo_size_ratio=0.5,
         filename="wide1080",
