@@ -52,7 +52,6 @@ class Function:
         min_height=128,
         angle_degrees=45,
         draw=True,
-        show=False,
         save=True,
         save_cfg=False,
     ):
@@ -110,8 +109,6 @@ class Function:
                             )
                             if draw:
                                 instance.draw()
-                            if show:
-                                instance.result.show()
                             if save:
                                 instance.save(
                                     path=os.path.join(
@@ -180,9 +177,7 @@ class Function:
                 arc_outline_color=arc_outline_color,
             )
             frame.draw()
-            frame_path = os.path.join(frame_folder, f"{i:06d}.png")
-            frame.save(frame_path, format="png")
-            frames.append(np.array(Image.open(frame_path)))
+            frames.append(np.rot90(frame.value))
             progress_bar.update(1)
         progress_bar.close()
 

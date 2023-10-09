@@ -11,10 +11,10 @@ from utils import *
 
 F.generate_video(
     logo_size_ratio=0.5,
-    filename="wide8k120",
-    width=7680,
-    height=4320,
-    frame_frequency=120,
+    filename="BlueWide2k30",
+    width=1920,
+    height=1080,
+    frame_frequency=30,
     arc_body_color=BLUE,
     arc_outline_color=BLUE,
     single_line_body_color=BLUE,
