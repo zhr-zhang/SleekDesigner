@@ -1,7 +1,5 @@
 import math
-from line import Line
-from figure import Figure
-from arc import Arc
+from figure import Figure, Line, Arc
 
 
 class Logo:
@@ -16,12 +14,14 @@ class Logo:
         inside_line_outline_color,
         single_line_body_color,
         single_line_outline_color,
+        arc_body_color,
+        arc_outline_color,
         image_slice,
     ) -> None:
         self.size = logo_size
         self.tensor = image_slice
         self.unit = self.size / (4 * math.sqrt(34) + 2)
-        angle=angle_degrees*math.pi/180
+        angle_arc=angle_degrees*math.pi/180
 
         # Define the figures for the logo
         self.figures = [
@@ -59,29 +59,29 @@ class Logo:
                 center=(0, 0),
                 a=(10, -6),
                 b=(10, 6),
-                body_color=single_line_body_color,
-                outline_color=single_line_outline_color,
+                body_color=arc_body_color,
+                outline_color=arc_outline_color,
             ),
             Arc(
                 center=(0, 0),
                 a=(-10, 6),
                 b=(-10, -6),
-                body_color=single_line_body_color,
-                outline_color=single_line_outline_color,
+                body_color=arc_body_color,
+                outline_color=arc_outline_color,
             ),
             Arc(
                 center=(0, 0),
                 a=(6, 10),
                 b=(-6, 10),
-                body_color=single_line_body_color,
-                outline_color=single_line_outline_color,
+                body_color=arc_body_color,
+                outline_color=arc_outline_color,
             ),
             Arc(
                 center=(0, 0),
                 a=(-6, -10),
                 b=(6, -10),
-                body_color=single_line_body_color,
-                outline_color=single_line_outline_color,
+                body_color=arc_body_color,
+                outline_color=arc_outline_color,
             ),
         ]
 
@@ -90,12 +90,15 @@ class Logo:
             Figure.STANDARD_DISTANCE * self.unit - outline_thickness, 2
         )
         unit2 = pow(self.unit, 2)
+        half_size=self.size/2
+        sin_angle = math.sin(angle_arc)
+        cos_angle = math.cos(angle_arc)
         for x in range(self.size):
             for y in range(self.size):
-                m = (x - self.size / 2) / self.unit
-                n = (y - self.size / 2) / self.unit
-                x_in_logo = m * math.cos(angle) + n * math.sin(angle)
-                y_in_logo = -m * math.sin(angle) + n * math.cos(angle)
+                m = (x - half_size) / self.unit
+                n = (y - half_size) / self.unit
+                x_in_logo = m * cos_angle + n * sin_angle
+                y_in_logo = -m * sin_angle + n * cos_angle
                 for figure in self.figures:
                     distance2 = figure.distance2(x_in_logo, y_in_logo) * unit2
                     if distance2 <= body_distance2:

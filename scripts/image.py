@@ -24,8 +24,10 @@ class LogoImage:
         outside_line_outline_color=LIGHT,
         inside_line_body_color=LIGHT,
         inside_line_outline_color=LIGHT,
-        single_line_body_color=Z_RED,
-        single_line_outline_color=Z_RED,
+        single_line_body_color=RED,
+        single_line_outline_color=RED,
+        arc_body_color=RED,
+        arc_outline_color=RED,
     ) -> None:
         """
         Initialize the LogoImage class with various customi
@@ -43,7 +45,8 @@ class LogoImage:
         self.inside_line_outline_color = inside_line_outline_color
         self.single_line_body_color = single_line_body_color
         self.single_line_outline_color = single_line_outline_color
-        self.result = None
+        self.arc_body_color=arc_body_color
+        self.arc_outline_color=arc_outline_color
 
     def draw(self) -> None:
         """
@@ -72,15 +75,15 @@ class LogoImage:
                 inside_line_outline_color=self.inside_line_outline_color,
                 single_line_body_color=self.single_line_body_color,
                 single_line_outline_color=self.single_line_outline_color,
+                arc_body_color=self.arc_body_color,
+                arc_outline_color=self.arc_outline_color,
                 image_slice=self.value[
                     logo_start_x:logo_end_x, logo_start_y:logo_end_y
                 ],
             )
             .get_logo()
-            .transpose((1, 0, 2))[::-1, :, :]
         )
 
-        self.result = Image.fromarray(self.value, "RGBA")
 
     def get_info(self):
         """
@@ -142,13 +145,5 @@ class LogoImage:
         """
         Save the final image to a file.
         """
-        self.result.save(path, format=format)
+        Image.fromarray(np.rot90(self.value,k=1), "RGBA").save(path, format=format)
 
-    def get_image(self):
-        """
-        Get the final image.
-
-        Returns:
-            Image: The final image.
-        """
-        return self.result
