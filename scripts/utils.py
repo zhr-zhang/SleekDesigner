@@ -1,4 +1,5 @@
 import os
+from figure import *
 
 # Define RGBA color constants for easy reference
 RED = (240, 0, 80, 255)
@@ -35,5 +36,56 @@ BACKGROUND_COLORS = [BLACK, WHITE, TRANSPARENT]
 script_directory = os.path.dirname(os.path.abspath(__file__))
 output_folder = os.path.join(script_directory, "..", "output")
 os.makedirs(output_folder, exist_ok=True)
-cfg_folder = os.path.join(script_directory, "..", "cfg")
-os.makedirs(cfg_folder, exist_ok=True)
+
+CLASSIC_LOGO_FIGURES = [
+    Line(
+        a=(-6, 6),
+        b=(6, 6),
+        color=WHITE,
+    ),
+    Line(
+        a=(-6, -6),
+        b=(6, -6),
+        color=WHITE,
+    ),
+    Line(
+        a=(-2, 2),
+        b=(2, 2),
+        color=WHITE,
+    ),
+    Line(
+        a=(-2, -2),
+        b=(2, -2),
+        color=WHITE,
+    ),
+    Line(
+        a=(6, 6),
+        b=(-6, -6),
+        color=RED,
+    ),
+    # Arc(
+    #     center=(0, 0),
+    #     a=(10, -6),
+    #     b=(10, 6),
+    #     color=RED,
+    # ),
+    # Arc(
+    #     center=(0, 0),
+    #     a=(-10, 6),
+    #     b=(-10, -6),
+    #     color=RED,
+    # ),
+    # Arc(
+    #     center=(0, 0),
+    #     a=(6, 10),
+    #     b=(-6, 10),
+    #     color=RED,
+    # ),
+    # Arc(
+    #     center=(0, 0),
+    #     a=(-6, -10),
+    #     b=(6, -10),
+    #     color=RED,
+    # ),
+]
+CLASSIC_LOGO_SIZE = 2 + 12 * math.sqrt(2)

@@ -4,9 +4,8 @@ import math
 class Figure:
     STANDARD_DISTANCE = 1
 
-    def __init__(self, body_color, outline_color):
-        self.body_color = body_color
-        self.outline_color = outline_color
+    def __init__(self, color):
+        self.color = color
 
     def distance2(self, xp, yp):
         pass
@@ -17,11 +16,11 @@ class Line(Figure):
     A nested class for defining the lines used in the Z logo.
     """
 
-    def __init__(self, a, b, body_color, outline_color) -> None:
+    def __init__(self, a, b, color) -> None:
         """
         Initialize the Line class.
         """
-        super().__init__(body_color, outline_color)
+        super().__init__(color)
         self.x1, self.y1 = a
         self.x2, self.y2 = b
         self.A = self.x2 - self.x1
@@ -45,8 +44,8 @@ class Line(Figure):
 
 
 class Arc(Figure):
-    def __init__(self, center, a, b, body_color, outline_color):
-        super().__init__(body_color, outline_color)
+    def __init__(self, center, a, b, color):
+        super().__init__(color)
         self.x0, self.y0 = center
         self.xa, self.ya = a
         self.xb, self.yb = b
