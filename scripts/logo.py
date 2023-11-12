@@ -5,20 +5,17 @@ from pattern import Pattern
 class Logo(Pattern):
     def __init__(
         self,
-        size=2 + 12 * math.sqrt(2),
         single_color=RED,
         outer_color=WHITE,
         inner_color=WHITE,
-        blackground_color=BLACK,
+        background_color=BLACK,
     ):
         super().__init__(
-            size=size,
-            background_color=blackground_color,
+            background_color=background_color,
         )
         self.single_color = single_color
         self.outer_color = outer_color
         self.inner_color = inner_color
-        self.blackground_color = blackground_color
 
         self.figures = [
             Line(
@@ -49,19 +46,85 @@ class Logo(Pattern):
         ]
 
     def get_info(self):
-        """
-        Get information about the logo image for file naming.
-
-        Returns:
-            str: Information string for file naming.
-        """
-        image_info = (
-            COLOR_MAP.get(self.outer_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.inner_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.inner_color, "UNKNOWN")
-            + "_"
-            + COLOR_MAP.get(self.single_color, "UNKNOWN")
+        info = (
+            COLOR_MAP.get(self.single_color, "u")
+            + COLOR_MAP.get(self.outer_color, "u")
+            + COLOR_MAP.get(self.inner_color, "u")
         )
-        return image_info
+        return info
+
+
+logos = [
+    Logo(
+        single_color=RED,
+        outer_color=LIGHT,
+        inner_color=LIGHT,
+        background_color=BLACK,
+    ),
+    Logo(
+        single_color=BLUE,
+        outer_color=LIGHT,
+        inner_color=LIGHT,
+        background_color=BLACK,
+    ),
+    Logo(
+        single_color=YELLOW,
+        outer_color=LIGHT,
+        inner_color=LIGHT,
+        background_color=BLACK,
+    ),
+    Logo(
+        single_color=LIGHT,
+        outer_color=RED,
+        inner_color=RED,
+        background_color=BLACK,
+    ),
+    Logo(
+        single_color=LIGHT,
+        outer_color=BLUE,
+        inner_color=BLUE,
+        background_color=BLACK,
+    ),
+    Logo(
+        single_color=LIGHT,
+        outer_color=YELLOW,
+        inner_color=YELLOW,
+        background_color=BLACK,
+    ),
+    Logo(
+        single_color=RED,
+        outer_color=DARK,
+        inner_color=DARK,
+        background_color=WHITE,
+    ),
+    Logo(
+        single_color=BLUE,
+        outer_color=DARK,
+        inner_color=DARK,
+        background_color=WHITE,
+    ),
+    Logo(
+        single_color=YELLOW,
+        outer_color=DARK,
+        inner_color=DARK,
+        background_color=WHITE,
+    ),
+    Logo(
+        single_color=DARK,
+        outer_color=RED,
+        inner_color=RED,
+        background_color=WHITE,
+    ),
+    Logo(
+        single_color=DARK,
+        outer_color=BLUE,
+        inner_color=BLUE,
+        background_color=WHITE,
+    ),
+    Logo(
+        single_color=DARK,
+        outer_color=YELLOW,
+        inner_color=YELLOW,
+        background_color=WHITE,
+    ),
+]

@@ -65,6 +65,7 @@ class Pattern:
         filename="wide1080",
         width: int = 1920,
         height: int = 1080,
+        background_color=BLACK,
         start_angle_degrees=45,
         degree_per_second=45,
         fps=30,
@@ -79,13 +80,14 @@ class Pattern:
         frames = []
         progress_bar = tqdm(total=num_frames, desc="Generating frames", unit="frames")
         for i in range(num_frames):
-            present_angle_degree = start_angle_degrees + i * angle_degree_per_frame
+            present_angle_degrees = start_angle_degrees + i * angle_degree_per_frame
             frames.append(
                 self.generate_image(
-                    ratio=ratio,
                     width=width,
                     height=height,
-                    angle_degrees=present_angle_degree,
+                    background_color=background_color,
+                    ratio=ratio,
+                    angle_degrees=present_angle_degrees,
                 )
             )
             progress_bar.update(1)
