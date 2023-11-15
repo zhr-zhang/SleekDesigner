@@ -12,14 +12,7 @@ class Figure:
 
 
 class Line(Figure):
-    """
-    A nested class for defining the lines used in the Z logo.
-    """
-
     def __init__(self, a, b, color) -> None:
-        """
-        Initialize the Line class.
-        """
         super().__init__(color)
         self.x1, self.y1 = a
         self.x2, self.y2 = b
@@ -29,9 +22,6 @@ class Line(Figure):
         self.D = pow(self.A, 2) + pow(self.B, 2)
 
     def distance2(self, xp, yp):
-        """
-        Calculate the square of the distance between a point and the line.
-        """
         r = (xp * self.A + yp * self.B + self.C) / self.D
         if r <= 0:
             return pow(xp - self.x1, 2) + pow(yp - self.y1, 2)
@@ -89,3 +79,12 @@ class Arc(Figure):
             else:
                 distance2 = (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
         return distance2
+
+
+class Dot(Figure):
+    def __init__(self, position, color):
+        super().__init__(color)
+        self.x, self.y = position
+
+    def distance2(self, xp, yp):
+        return (self.x - xp) ** 2 + (self.y - yp) ** 2
