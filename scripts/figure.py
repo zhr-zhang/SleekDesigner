@@ -2,18 +2,39 @@ import math
 
 
 class Figure:
-    STANDARD_DISTANCE = 1
-
-    def __init__(self, color):
+    def __init__(
+        self,
+        color,
+        distance=1,
+    ):
         self.color = color
+        self.distance = distance
 
-    def distance2(self, xp, yp):
+    def distance2(self, xp: float, yp: float):
         pass
+
+    def is_inside(self, xp: float, yp: float):
+        distance_2 = self.distance2(xp, yp)
+        if distance_2 <= self.distance**2:
+            return True
+        else:
+            return False
+
+
+class Circle(Figure):
+    def __init__(self, x: float, y: float, r: float, color) -> None:
+        super().__init__(color)
+        self.x = x
+        self.y = y
+        self.r = r
+
+    def distance2(self, xp: float, yp: float):
+        return (self.x - xp) ** 2 + (self.y - yp) ** 2
 
 
 class Line(Figure):
-    def __init__(self, a, b, color) -> None:
-        super().__init__(color)
+    def __init__(self, a, b, color, distance=1) -> None:
+        super().__init__(color, distance)
         self.x1, self.y1 = a
         self.x2, self.y2 = b
         self.A = self.x2 - self.x1
@@ -34,8 +55,8 @@ class Line(Figure):
 
 
 class Arc(Figure):
-    def __init__(self, center, a, b, color):
-        super().__init__(color)
+    def __init__(self, center, a, b, color, distance):
+        super().__init__(color, distance=1)
         self.x0, self.y0 = center
         self.xa, self.ya = a
         self.xb, self.yb = b
@@ -82,8 +103,8 @@ class Arc(Figure):
 
 
 class Dot(Figure):
-    def __init__(self, position, color):
-        super().__init__(color)
+    def __init__(self, position, color, distance=1):
+        super().__init__(color, distance)
         self.x, self.y = position
 
     def distance2(self, xp, yp):

@@ -23,7 +23,7 @@ class Pattern:
         width=1920,
         height=1080,
         ratio=0.5,
-        angle_degrees=45,
+        angle_degrees=0,
     ):
         logo_size = int(min(width, height) * ratio)
         self.value = np.full((width, height, 4), self.background_color, dtype=np.uint8)
@@ -33,7 +33,6 @@ class Pattern:
 
         unit = logo_size / self.size
         unit2 = pow(unit, 2)
-        standard_distance2 = pow(Figure.STANDARD_DISTANCE * unit, 2)
         half_size = logo_size / 2
         angle_arc = angle_degrees * math.pi / 180
         sin_angle = math.sin(angle_arc)
@@ -46,8 +45,7 @@ class Pattern:
                 x_in_logo = m * cos_angle + n * sin_angle
                 y_in_logo = -m * sin_angle + n * cos_angle
                 for figure in self.figures:
-                    distance2 = figure.distance2(x_in_logo, y_in_logo) * unit2
-                    if distance2 <= standard_distance2:
+                    if figure.is_inside(x_in_logo, y_in_logo):
                         logo_slice[x, y, :] = figure.color
                         break
 

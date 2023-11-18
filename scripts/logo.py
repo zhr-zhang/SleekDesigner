@@ -45,6 +45,9 @@ class Logo(Pattern):
             ),
         ]
 
+    def generate_image(self, width=1920, height=1080, ratio=0.5, angle_degrees=45):
+        return super().generate_image(width, height, ratio, angle_degrees)
+
     def get_info(self):
         info = (
             COLOR_MAP.get(self.single_color, "u")
