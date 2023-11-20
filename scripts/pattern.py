@@ -10,8 +10,8 @@ from figure import Figure
 class Pattern:
     def __init__(
         self,
-        figures=CLASSIC_LOGO_FIGURES,
-        size=CLASSIC_LOGO_SIZE,
+        figures=[Line(a=(0, -5), b=(0, 5), color=RED)],
+        size=11,
         background_color=BLACK,
     ) -> None:
         self.figures = figures

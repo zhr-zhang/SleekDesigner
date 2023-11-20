@@ -1,4 +1,4 @@
-from logo import Logo, logos
+from logo import Logo
 from pattern import Pattern
 from PIL import Image
 import os
@@ -12,21 +12,21 @@ yc = Pattern(
             center=(0, 0),
             a=(4, -8 * math.sqrt(2)),
             b=(-4, -8 * math.sqrt(2)),
-            color=LIGHT,
+            color=DARK,
         ),
         Line(a=(0, 0), b=(-4 * math.sqrt(2), 4 * math.sqrt(2)), color=RED),
         Line(a=(0, 0), b=(4 * math.sqrt(2), 4 * math.sqrt(2)), color=RED),
-        Line(a=(0, 0), b=(0, -12), color=LIGHT),
+        Line(a=(0, 0), b=(0, -12), color=DARK),
     ],
     size=26,
-    background_color=BLACK,
+    background_color=WHITE,
 )
 Pattern.save(
     obj=yc.generate_image(
         width=1024,
         height=1024,
         ratio=0.7,
-        angle_degrees=0,
+        angle_degrees=90,
     ),
     path="yc1.png",
 )

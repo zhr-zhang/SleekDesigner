@@ -23,22 +23,3 @@ Pattern.save(
     ),
     path="llf.png",
 )
-
-
-# arrow = Pattern(
-#     figures=[
-#         Line((10, 0), (0, 10), color=WHITE),
-#         Line((10, 0), (0, -10), color=WHITE),
-#         Line((-10, 0), (10, 0), color=RED),
-#     ],
-#     size=22,
-# )
-# Pattern.save(obj=arrow.generate_image(), path="arrow.png")
-
-# i = 0
-# for logo in logos:
-#     Image.fromarray(
-#         logo.generate_image(),
-#         mode="RGBA",
-#     ).save(os.path.join(output_folder, f"{i}.png"))
-#     i += 1
