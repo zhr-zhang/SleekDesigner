@@ -7,14 +7,22 @@ from utils import *
 
 llf = Pattern(
     figures=[
-        Dot((-3, 7), color=WHITE, distance=5),
-        Line((-3, 0), (3, 0), color=WHITE),
-        Line((-3, 7), (-3, -7), color=RED),
-        Line((-3, -7), (3, -7), color=WHITE),
+        Dot((-1.5, 5), color=BLUE, distance=4),
+        Line((-1.5, -2), (4.5, -2), color=DARK),
+        Line((-1.5, 5), (-1.5, -8), color=BLUE),
+        Line((-1.5, -8), (4.5, -8), color=DARK),
     ],
-    size=25,
+    size=18,
+    background_color=WHITE,
 )
-Pattern.save(obj=llf.generate_image(), path="llf.png")
+Pattern.save(
+    obj=llf.generate_image(
+        width=2048,
+        height=2048,
+        ratio=0.7,
+    ),
+    path="llf.png",
+)
 
 
 # arrow = Pattern(

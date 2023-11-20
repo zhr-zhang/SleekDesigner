@@ -104,5 +104,3 @@ class Pattern:
     @staticmethod
     def save(obj, path, format="png") -> None:
         Image.fromarray(obj, "RGBA").save(path, format=format)
-
-

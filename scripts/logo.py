@@ -18,43 +18,15 @@ class Logo(Pattern):
         self.inner_color = inner_color
 
         self.figures = [
-            Line(
-                a=(-6, 6),
-                b=(6, 6),
-                color=outer_color,
-            ),
-            Line(
-                a=(-6, -6),
-                b=(6, -6),
-                color=outer_color,
-            ),
-            Line(
-                a=(-2, 2),
-                b=(2, 2),
-                color=inner_color,
-            ),
-            Line(
-                a=(-2, -2),
-                b=(2, -2),
-                color=inner_color,
-            ),
-            Line(
-                a=(6, 6),
-                b=(-6, -6),
-                color=single_color,
-            ),
+            Line(a=(-6, 6), b=(6, 6), color=outer_color),
+            Line(a=(-6, -6), b=(6, -6), color=outer_color),
+            Line(a=(-2, 2), b=(2, 2), color=inner_color),
+            Line(a=(-2, -2), b=(2, -2), color=inner_color),
+            Line(a=(6, 6), b=(-6, -6), color=single_color),
         ]
 
     def generate_image(self, width=1920, height=1080, ratio=0.5, angle_degrees=45):
         return super().generate_image(width, height, ratio, angle_degrees)
-
-    def get_info(self):
-        info = (
-            COLOR_MAP.get(self.single_color, "u")
-            + COLOR_MAP.get(self.outer_color, "u")
-            + COLOR_MAP.get(self.inner_color, "u")
-        )
-        return info
 
 
 logos = [

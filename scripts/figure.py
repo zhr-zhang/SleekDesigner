@@ -21,17 +21,6 @@ class Figure:
             return False
 
 
-class Circle(Figure):
-    def __init__(self, x: float, y: float, r: float, color) -> None:
-        super().__init__(color)
-        self.x = x
-        self.y = y
-        self.r = r
-
-    def distance2(self, xp: float, yp: float):
-        return (self.x - xp) ** 2 + (self.y - yp) ** 2
-
-
 class Line(Figure):
     def __init__(self, a, b, color, distance=1) -> None:
         super().__init__(color, distance)
@@ -55,7 +44,7 @@ class Line(Figure):
 
 
 class Arc(Figure):
-    def __init__(self, center, a, b, color, distance):
+    def __init__(self, center, a, b, color, distance=1):
         super().__init__(color, distance=1)
         self.x0, self.y0 = center
         self.xa, self.ya = a
