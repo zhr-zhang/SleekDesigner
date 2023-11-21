@@ -1,4 +1,4 @@
-from logo import Logo, logos
+from logo import Logo
 from pattern import Pattern
 from PIL import Image
 import os

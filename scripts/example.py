@@ -12,14 +12,14 @@ yc = Pattern(
             center=(0, 0),
             a=(4, -8 * math.sqrt(2)),
             b=(-4, -8 * math.sqrt(2)),
-            color=DARK,
+            color=LIGHT,
         ),
-        Line(a=(0, 0), b=(-4 * math.sqrt(2), 4 * math.sqrt(2)), color=RED),
-        Line(a=(0, 0), b=(4 * math.sqrt(2), 4 * math.sqrt(2)), color=RED),
-        Line(a=(0, 0), b=(0, -12), color=DARK),
+        Line(a=(0, 0), b=(-4 * math.sqrt(2), 4 * math.sqrt(2)), color=BLUE),
+        Line(a=(0, 0), b=(4 * math.sqrt(2), 4 * math.sqrt(2)), color=BLUE),
+        Line(a=(0, 0), b=(0, -12), color=LIGHT),
     ],
     size=26,
-    background_color=WHITE,
+    background_color=BLACK,
 )
 Pattern.save(
     obj=yc.generate_image(
