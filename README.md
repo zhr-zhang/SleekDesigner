@@ -3,6 +3,9 @@ sleek designer is a simple and lightweight python framework for creating beautif
 
 ## Usage
 ```python
+from utils import *
+from pattern import Pattern
+from figure import *
 arrow = Pattern(
     figures=[
         Line((10, 0), (0, 10), color=WHITE),
