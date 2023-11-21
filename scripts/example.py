@@ -14,17 +14,25 @@ yc = Pattern(
             b=(-4, -8 * math.sqrt(2)),
             color=LIGHT,
         ),
-        Line(a=(0, 0), b=(-4 * math.sqrt(2), 4 * math.sqrt(2)), color=BLUE),
-        Line(a=(0, 0), b=(4 * math.sqrt(2), 4 * math.sqrt(2)), color=BLUE),
+        Line(
+            a=(0, 0),
+            b=(-4 * math.sqrt(2), 4 * math.sqrt(2)),
+            color=(240, 100, 120, 255),
+        ),
+        Line(
+            a=(0, 0),
+            b=(4 * math.sqrt(2), 4 * math.sqrt(2)),
+            color=(240, 100, 120, 255),
+        ),
         Line(a=(0, 0), b=(0, -12), color=LIGHT),
     ],
     size=26,
-    background_color=BLACK,
+    background_color=WHITE,
 )
 Pattern.save(
     obj=yc.generate_image(
-        width=1024,
-        height=1024,
+        width=1024 * 4,
+        height=1024 * 4,
         ratio=0.7,
         angle_degrees=90,
     ),
