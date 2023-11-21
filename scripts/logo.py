@@ -2,29 +2,44 @@ from utils import *
 from pattern import Pattern
 
 
-class Logo(Pattern):
-    def __init__(
-        self,
-        single_color=RED,
-        outer_color=WHITE,
-        inner_color=WHITE,
-        background_color=BLACK,
-    ):
-        super().__init__(
-            background_color=background_color,
-        )
-        self.single_color = single_color
-        self.outer_color = outer_color
-        self.inner_color = inner_color
+z = Pattern(
+    figures=[
+        Line(a=(-6, 6), b=(6, 6), color=LIGHT),
+        Line(a=(-6, -6), b=(6, -6), color=LIGHT),
+        Line(a=(-2, 2), b=(2, 2), color=LIGHT),
+        Line(a=(-2, -2), b=(2, -2), color=LIGHT),
+        Line(a=(6, 6), b=(-6, -6), color=RED),
+    ],
+    size=12 * math.sqrt(2) + 2,
+    background_color=BLACK,
+    name="z",
+)
 
-        self.figures = [
-            Line(a=(-6, 6), b=(6, 6), color=outer_color),
-            Line(a=(-6, -6), b=(6, -6), color=outer_color),
-            Line(a=(-2, 2), b=(2, 2), color=inner_color),
-            Line(a=(-2, -2), b=(2, -2), color=inner_color),
-            Line(a=(6, 6), b=(-6, -6), color=single_color),
-        ]
+syc = Pattern(
+    figures=[
+        Arc(
+            center=(0, 0),
+            a=(8 * math.sqrt(2), 4),
+            b=(8 * math.sqrt(2), -4),
+            color=LIGHT,
+        ),
+        Line(a=(0, 0), b=(-4 * math.sqrt(2), 4 * math.sqrt(2)), color=PURPLE),
+        Line(a=(0, 0), b=(-4 * math.sqrt(2), -4 * math.sqrt(2)), color=PURPLE),
+        Line(a=(0, 0), b=(12, 0), color=LIGHT),
+    ],
+    size=26,
+    background_color=BLACK,
+    name="syc",
+)
 
-    def generate_image(self, width=1920, height=1080, ratio=0.5, angle_degrees=45):
-        return super().generate_image(width, height, ratio, angle_degrees)
-
+llf = Pattern(
+    figures=[
+        Dot((-1.5, 5), color=BLUE, distance=4),
+        Line((-1.5, -2), (4.5, -2), color=DARK),
+        Line((-1.5, 5), (-1.5, -8), color=BLUE),
+        Line((-1.5, -8), (4.5, -8), color=DARK),
+    ],
+    size=18,
+    background_color=WHITE,
+    name="llf",
+)
