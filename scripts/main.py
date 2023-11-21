@@ -1,22 +1,25 @@
-from function import Function as F
+from logo import Logo
+from pattern import Pattern
+from PIL import Image
+import os
 from utils import *
 
-# F.generate_single_logo(
-#     width=7680 * 4,
-#     height=4320 * 4,
-#     filename="wide32k.png",
-# )
 
-# F.batch_generate_logo()
-
-F.generate_video(
-    logo_size_ratio=0.5,
-    filename="BlueWide2k30",
-    width=1920,
-    height=1080,
-    frame_frequency=30,
-    arc_body_color=BLUE,
-    arc_outline_color=BLUE,
-    single_line_body_color=BLUE,
-    single_line_outline_color=BLUE,
+llf = Pattern(
+    figures=[
+        Dot((-1.5, 5), color=BLUE, distance=4),
+        Line((-1.5, -2), (4.5, -2), color=DARK),
+        Line((-1.5, 5), (-1.5, -8), color=BLUE),
+        Line((-1.5, -8), (4.5, -8), color=DARK),
+    ],
+    size=18,
+    background_color=WHITE,
+)
+Pattern.save(
+    obj=llf.generate_image(
+        width=2048,
+        height=2048,
+        ratio=0.7,
+    ),
+    path="llf.png",
 )

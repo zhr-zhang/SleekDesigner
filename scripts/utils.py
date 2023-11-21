@@ -1,4 +1,5 @@
 import os
+from figure import *
 
 # Define RGBA color constants for easy reference
 RED = (240, 0, 80, 255)
@@ -35,5 +36,18 @@ BACKGROUND_COLORS = [BLACK, WHITE, TRANSPARENT]
 script_directory = os.path.dirname(os.path.abspath(__file__))
 output_folder = os.path.join(script_directory, "..", "output")
 os.makedirs(output_folder, exist_ok=True)
-cfg_folder = os.path.join(script_directory, "..", "cfg")
-os.makedirs(cfg_folder, exist_ok=True)
+
+color_schemes = [
+    [RED, LIGHT, BLACK],
+    [RED, DARK, WHITE],
+    [LIGHT, RED, BLACK],
+    [DARK, RED, WHITE],
+    [BLUE, LIGHT, BLACK],
+    [BLUE, DARK, WHITE],
+    [LIGHT, BLUE, BLACK],
+    [DARK, BLUE, WHITE],
+    [YELLOW, LIGHT, BLACK],
+    [YELLOW, DARK, WHITE],
+    [LIGHT, YELLOW, BLACK],
+    [DARK, YELLOW, WHITE],
+]

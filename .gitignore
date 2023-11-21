@@ -3,7 +3,9 @@
 
 # Output folder
 output/
-
+*.png
+*.jpg
+*.mp4
 # notebooks
 notebooks/
 
