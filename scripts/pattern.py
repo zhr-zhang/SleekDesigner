@@ -4,7 +4,6 @@ from PIL import Image
 from tqdm import tqdm
 from moviepy.editor import ImageSequenceClip
 from utils import *
-from figure import Figure
 
 
 class Pattern:
@@ -13,10 +12,12 @@ class Pattern:
         figures=[Line(a=(0, -5), b=(0, 5), color=RED)],
         size=11,
         background_color=BLACK,
+        name=""
     ) -> None:
         self.figures = figures
         self.size = size
         self.background_color = background_color
+        self.name=name
 
     def generate_image(
         self,
@@ -32,7 +33,6 @@ class Pattern:
         )
 
         unit = logo_size / self.size
-        unit2 = pow(unit, 2)
         half_size = logo_size / 2
         angle_arc = angle_degrees * math.pi / 180
         sin_angle = math.sin(angle_arc)
