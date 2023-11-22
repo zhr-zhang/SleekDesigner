@@ -14,7 +14,7 @@ class Pattern:
         figures: list[Figure] = [Line(a=(0, -5), b=(0, 5), color=RED)],
         size: int = 11,
         background_color: (np.uint8, np.uint8, np.uint8, np.uint8) = BLACK,
-        name: str = "",
+        name: str = "pattern",
     ) -> None:
         self.figures = figures
         self.size = size
@@ -63,8 +63,8 @@ class Pattern:
         self,
         ratio: float = 0.7,
         filename: str = "wide1080",
-        width: int = 1920,
-        height: int = 1080,
+        width: int = 1024,
+        height: int = 1024,
         background_color: (np.uint8, np.uint8, np.uint8, np.uint8) = BLACK,
         start_angle_degrees: float = 45,
         degree_per_second: float = 45,

@@ -4,6 +4,16 @@
 
 ## Usage
 
+SleekDesigner has got some build-in patterns, which can be used as examples for your own designs.
+To use them, you can simply import every items in `logo` and use them as templates.
+
+```python
+from logo inport *
+```
+
+If you want to create your own patterns, you can use the `Pattern` class.
+It has got some optional parameters, which can be used to create your own patterns.
+
 ```python
 from utils import *
 from pattern import Pattern
@@ -30,6 +40,11 @@ This project is written in `python3` , and is based on some libraries. So before
 ```bash
 $ pip install numpy pillow moviepy
 ```
+
+## Documentation
+
+To get to know how `SleekDesigner` works, please goto [DOCUMENT](document.txt) for
+more details.
 
 ## License
 
