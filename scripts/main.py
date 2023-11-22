@@ -1,8 +1,7 @@
+import os
 from logo import syc
 from pattern import Pattern
-from PIL import Image
-import os
-from utils import *
+from color import *
 
 Pattern.save(
     obj=syc.generate_image(

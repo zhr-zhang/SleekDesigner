@@ -1,5 +1,6 @@
-from utils import *
+from color import *
 from pattern import Pattern
+from figure import *
 
 
 z = Pattern(

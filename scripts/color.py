@@ -1,6 +1,3 @@
-import os
-from figure import *
-
 # Define RGBA color constants for easy reference
 RED = (240, 0, 80, 255)
 BLUE = (8, 131, 163, 255)
@@ -31,12 +28,6 @@ COLOR_MAP = {
 # Define the theme colors and background colors for the logo (used in color combinations)
 THEME_COLORS = [RED, BLUE, YELLOW]
 BACKGROUND_COLORS = [BLACK, WHITE, TRANSPARENT]
-
-
-# Define the folder where the generated logo images will be saved
-script_directory = os.path.dirname(os.path.abspath(__file__))
-output_folder = os.path.join(script_directory, "..", "output")
-os.makedirs(output_folder, exist_ok=True)
 
 color_schemes = [
     [RED, LIGHT, BLACK],
