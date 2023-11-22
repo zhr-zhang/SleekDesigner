@@ -1,29 +1,56 @@
 import math
+import numpy as np
 
 
 class Figure:
     def __init__(
         self,
-        color,
-        distance=1,
+        color: (
+            np.uint8,
+            np.uint8,
+            np.uint8,
+            np.uint8,
+        ),
+        distance: float = 1,
     ):
         self.color = color
         self.distance = distance
 
-    def distance2(self, xp: float, yp: float):
+    def distance2(
+        self,
+        xp: float,
+        yp: float,
+    ):
         pass
 
-    def is_inside(self, xp: float, yp: float):
+    def is_inside(
+        self,
+        xp: float,
+        yp: float,
+    ):
         distance_2 = self.distance2(xp, yp)
-        if distance_2 <= self.distance**2:
+        if distance_2 <= pow(self.distance, 2):
             return True
-        else:
-            return False
+        return False
 
 
 class Line(Figure):
-    def __init__(self, a, b, color, distance=1) -> None:
-        super().__init__(color, distance)
+    def __init__(
+        self,
+        a: (float, float),
+        b: (float, float),
+        color: (
+            np.uint8,
+            np.uint8,
+            np.uint8,
+            np.uint8,
+        ),
+        distance: float = 1,
+    ) -> None:
+        super().__init__(
+            color=color,
+            distance=distance,
+        )
         self.x1, self.y1 = a
         self.x2, self.y2 = b
         self.A = self.x2 - self.x1
@@ -31,7 +58,11 @@ class Line(Figure):
         self.C = -self.x1 * self.A - self.y1 * self.B
         self.D = pow(self.A, 2) + pow(self.B, 2)
 
-    def distance2(self, xp, yp):
+    def distance2(
+        self,
+        xp: float,
+        yp: float,
+    ):
         r = (xp * self.A + yp * self.B + self.C) / self.D
         if r <= 0:
             return pow(xp - self.x1, 2) + pow(yp - self.y1, 2)
@@ -44,8 +75,23 @@ class Line(Figure):
 
 
 class Arc(Figure):
-    def __init__(self, center, a, b, color, distance=1):
-        super().__init__(color, distance=1)
+    def __init__(
+        self,
+        center: (float, float),
+        a: (float, float),
+        b: (float, float),
+        color: (
+            np.uint8,
+            np.uint8,
+            np.uint8,
+            np.uint8,
+        ),
+        distance: float = 1,
+    ):
+        super().__init__(
+            color=color,
+            distance=distance,
+        )
         self.x0, self.y0 = center
         self.xa, self.ya = a
         self.xb, self.yb = b
@@ -57,7 +103,11 @@ class Arc(Figure):
         # direction: clockwize > 0
         self.direction = self.x1 * self.y2 - self.x2 * self.y1
 
-    def distance2(self, xp, yp):
+    def distance2(
+        self,
+        xp: float,
+        yp: float,
+    ):
         xp -= self.x0
         yp -= self.y0
         # OP-> = m * OA-> + n * OB->
@@ -81,9 +131,22 @@ class Arc(Figure):
 
 
 class Dot(Figure):
-    def __init__(self, position, color, distance=1):
-        super().__init__(color, distance)
+    def __init__(
+        self,
+        position: (float, float),
+        color: (
+            np.uint8,
+            np.uint8,
+            np.uint8,
+            np.uint8,
+        ),
+        distance: float = 1,
+    ):
+        super().__init__(
+            color=color,
+            distance=distance,
+        )
         self.x, self.y = position
 
-    def distance2(self, xp, yp):
+    def distance2(self, xp: float, yp: float):
         return (self.x - xp) ** 2 + (self.y - yp) ** 2

@@ -1,6 +1,3 @@
-import os
-from figure import *
-
 # Define RGBA color constants for easy reference
 RED = (240, 0, 80, 255)
 BLUE = (8, 131, 163, 255)

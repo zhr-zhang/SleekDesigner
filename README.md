@@ -10,9 +10,9 @@ from pattern import Pattern
 from figure import *
 arrow = Pattern(
     figures=[
-        Line((10, 0), (0, 10), color=WHITE),
-        Line((10, 0), (0, -10), color=WHITE),
-        Line((-10, 0), (10, 0), color=RED),
+        Line(a=(10, 0), b=(0, 10), color=WHITE),
+        Line(a=(10, 0), b=(0, -10), color=WHITE),
+        Line(a=(-10, 0), b=(10, 0), color=RED),
     ],
     size=22,
 )
@@ -25,7 +25,7 @@ Pattern.save(
 
 ## Installation
 
-This project is written in `python3`, and is based on some libraries. So before you run the code, make sure that you have had them installed.
+This project is written in `python3` , and is based on some libraries. So before you run the code, make sure that you have had them installed.
 
 ```bash
 $ pip install numpy pillow moviepy

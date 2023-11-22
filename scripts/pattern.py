@@ -1,30 +1,32 @@
 import math
 import numpy as np
+import os
 from PIL import Image
 from tqdm import tqdm
 from moviepy.editor import ImageSequenceClip
-from scripts.color import *
+from color import *
+from figure import *
 
 
 class Pattern:
     def __init__(
         self,
-        figures=[Line(a=(0, -5), b=(0, 5), color=RED)],
-        size=11,
-        background_color=BLACK,
-        name=""
+        figures: list[Figure] = [Line(a=(0, -5), b=(0, 5), color=RED)],
+        size: int = 11,
+        background_color: (np.uint8, np.uint8, np.uint8, np.uint8) = BLACK,
+        name: str = "",
     ) -> None:
         self.figures = figures
         self.size = size
         self.background_color = background_color
-        self.name=name
+        self.name = name
 
     def generate_image(
         self,
-        width=1920,
-        height=1080,
-        ratio=0.5,
-        angle_degrees=0,
+        width: int = 1024,
+        height: int = 1024,
+        ratio: float = 0.7,
+        angle_degrees: float = 0,
     ):
         logo_size = int(min(width, height) * ratio)
         self.value = np.full((width, height, 4), self.background_color, dtype=np.uint8)
@@ -59,17 +61,17 @@ class Pattern:
 
     def generate_video(
         self,
-        ratio=0.5,
-        filename="wide1080",
+        ratio: float = 0.7,
+        filename: str = "wide1080",
         width: int = 1920,
         height: int = 1080,
-        background_color=BLACK,
-        start_angle_degrees=45,
-        degree_per_second=45,
-        fps=30,
-        time_seconds=4,
+        background_color: (np.uint8, np.uint8, np.uint8, np.uint8) = BLACK,
+        start_angle_degrees: float = 45,
+        degree_per_second: float = 45,
+        fps: int = 30,
+        time_seconds: float = 4,
     ):
-        save_folder = os.path.join(output_folder, "video")
+        save_folder = "video"
         os.makedirs(save_folder, exist_ok=True)
 
         num_frames = time_seconds * fps
