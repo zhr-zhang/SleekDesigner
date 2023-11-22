@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 from tqdm import tqdm
 from moviepy.editor import ImageSequenceClip
-from utils import *
+from scripts.color import *
 
 
 class Pattern:

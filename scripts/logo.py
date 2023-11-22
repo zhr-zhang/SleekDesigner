@@ -1,4 +1,4 @@
-from utils import *
+from scripts.color import *
 from pattern import Pattern
 
 
