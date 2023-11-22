@@ -66,10 +66,10 @@ class Pattern:
         width: int = 1024,
         height: int = 1024,
         background_color: (np.uint8, np.uint8, np.uint8, np.uint8) = BLACK,
-        start_angle_degrees: float = 45,
+        start_angle_degrees: float = 0,
         degree_per_second: float = 45,
         fps: int = 30,
-        time_seconds: float = 4,
+        time_seconds: float = 8,
     ):
         save_folder = "video"
         os.makedirs(save_folder, exist_ok=True)
@@ -85,7 +85,6 @@ class Pattern:
                 self.generate_image(
                     width=width,
                     height=height,
-                    background_color=background_color,
                     ratio=ratio,
                     angle_degrees=present_angle_degrees,
                 )
