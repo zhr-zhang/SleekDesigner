@@ -1,19 +1,55 @@
-# Sleek Designer
-sleek designer is a simple and lightweight python framework for creating beautiful and smooth logos.
+# SleekDesigner
+
+`SleekDesigner` is a simple and lightweight python framework for creating beautiful and smooth logos.
 
 ## Usage
+
+SleekDesigner has got some build-in patterns, which can be used as examples for your own designs.
+To use them, you can simply import every items in `logo` and use them as templates.
+
+```python
+from logo inport *
+```
+
+If you want to create your own patterns, you can use the `Pattern` class.
+It has got some optional parameters, which can be used to create your own patterns.
+
 ```python
 from utils import *
 from pattern import Pattern
 from figure import *
 arrow = Pattern(
     figures=[
-        Line((10, 0), (0, 10), color=WHITE),
-        Line((10, 0), (0, -10), color=WHITE),
-        Line((-10, 0), (10, 0), color=RED),
+        Line(a=(10, 0), b=(0, 10), color=WHITE),
+        Line(a=(10, 0), b=(0, -10), color=WHITE),
+        Line(a=(-10, 0), b=(10, 0), color=RED),
     ],
     size=22,
 )
-Pattern.save(obj=arrow.generate_image(), path="arrow.png")
+Pattern.save(
+    obj=arrow.generate_image(),
+    path="arrow.png",
+    format="png",
+)
 ```
-output/0.png
+
+## Installation
+
+This project is written in `python3` , and is based on some libraries. So before you run the code, make sure that you have had them installed.
+
+```bash
+$ pip install numpy pillow moviepy
+```
+
+## Documentation
+
+To get to know how `SleekDesigner` works, please goto [DOCUMENT](document.txt) for
+more details.
+
+## License
+
+This project is licensed under the `GPL` License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+To contribute to this project, please fork the repository and submit a pull request.

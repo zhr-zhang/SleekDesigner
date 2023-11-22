@@ -1,8 +1,9 @@
-from utils import *
+from color import *
 from pattern import Pattern
+from figure import *
 
 
-z = Pattern(
+zhr = Pattern(
     figures=[
         Line(a=(-6, 6), b=(6, 6), color=LIGHT),
         Line(a=(-6, -6), b=(6, -6), color=LIGHT),
@@ -12,7 +13,7 @@ z = Pattern(
     ],
     size=12 * math.sqrt(2) + 2,
     background_color=BLACK,
-    name="z",
+    name="zhr",
 )
 
 syc = Pattern(
