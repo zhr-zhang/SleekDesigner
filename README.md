@@ -8,14 +8,32 @@ SleekDesigner has got some build-in patterns, which can be used as examples for 
 To use them, you can simply import every items in `logo` and use them as templates.
 
 ```python
-from logo inport *
+from logo import *
+from pattern import Pattern
+from color import *
+
+obj = syc
+format = "png"
+
+obj.generate_video(filename="syc1024")
+
+Pattern.save(
+    obj=obj.generate_image( 
+        width=2048,
+        height=2048,
+        ratio=0.7,
+        angle_degrees=0,
+    ),
+    path=f"{obj.name}.{format}",
+    format=format,
+)
 ```
 
 If you want to create your own patterns, you can use the `Pattern` class.
 It has got some optional parameters, which can be used to create your own patterns.
 
 ```python
-from utils import *
+from color import *
 from pattern import Pattern
 from figure import *
 arrow = Pattern(
@@ -26,6 +44,7 @@ arrow = Pattern(
     ],
     size=22,
 )
+
 Pattern.save(
     obj=arrow.generate_image(),
     path="arrow.png",
