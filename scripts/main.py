@@ -6,7 +6,7 @@ from color import *
 obj = syc
 format = "png"
 
-# obj.generate_video(filename="syc1024")
+obj.generate_video(filename="syc1024")
 
 Pattern.save(
     obj=obj.generate_image(
