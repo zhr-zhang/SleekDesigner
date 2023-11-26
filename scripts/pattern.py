@@ -62,20 +62,17 @@ class Pattern:
     def generate_video(
         self,
         ratio: float = 0.7,
-        filename: str = "wide1080",
+        path: str = "my_video.mp4",
         width: int = 1024,
         height: int = 1024,
-        background_color: (np.uint8, np.uint8, np.uint8, np.uint8) = BLACK,
         start_angle_degrees: float = 0,
         degree_per_second: float = 45,
         fps: int = 30,
         time_seconds: float = 8,
     ):
-        save_folder = "video"
-        os.makedirs(save_folder, exist_ok=True)
-
         num_frames = time_seconds * fps
         angle_degree_per_frame = degree_per_second / fps
+        os.makedirs(os.path.dirname(path), exist_ok=True)
 
         frames = []
         progress_bar = tqdm(total=num_frames, desc="Generating frames", unit="frames")
@@ -92,10 +89,9 @@ class Pattern:
             progress_bar.update(1)
         progress_bar.close()
 
-        output_path = os.path.join(save_folder, f"{filename}.mp4")
         clip = ImageSequenceClip(frames, fps=fps)
         clip.write_videofile(
-            output_path,
+            path,
             codec="libx264",
             fps=fps,
             preset="ultrafast",
@@ -103,5 +99,6 @@ class Pattern:
         )
 
     @staticmethod
-    def save(obj, path, format="png") -> None:
+    def save_image(obj, path="my_image.png", format="png") -> None:
+        os.makedirs(os.path.dirname(path))
         Image.fromarray(obj, "RGBA").save(path, format=format)

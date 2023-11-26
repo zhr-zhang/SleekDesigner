@@ -1,10 +1,10 @@
 # SleekDesigner
-[logo](logos/zhr/zhr.png)
+
 `SleekDesigner` is a simple and lightweight python framework for creating beautiful and smooth logos.
 
 ## Getting started
 
-SleekDesigner has got several built-in patterns, which can be used as examples for your own designs.
+`SleekDesigner` has got some build-in patterns, which can be used as examples for your own designs.
 To use them, you can simply import every items in `logo` and use them as templates.
 
 ```python
@@ -60,11 +60,6 @@ This project is written in `python3` , and is based on some libraries. So before
 ```bash
 $ pip install numpy pillow moviepy
 ```
-
-## Documentation
-
-To get to know how `SleekDesigner` works, please goto [DOCUMENT](document.txt) for
-more details.
 
 ## License
 

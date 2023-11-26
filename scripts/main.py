@@ -6,9 +6,9 @@ from color import *
 obj = syc
 format = "png"
 
-obj.generate_video(filename="syc1024")
+obj.generate_video(path="syc1024.mp4",time_seconds=1)
 
-Pattern.save(
+Pattern.save_image(
     obj=obj.generate_image(
         width=2048,
         height=2048,
