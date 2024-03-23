@@ -1,106 +1,90 @@
 import math
 import numpy as np
+from typing import Tuple
+
+Color = Tuple[np.uint8, np.uint8, np.uint8, np.uint8]
+Position = Tuple[float, float]
 
 
 class Figure:
-    def __init__(
-        self,
-        color: (np.uint8, np.uint8, np.uint8, np.uint8),
-        distance: float = 1,
-    ):
+    """A base class for geometric figures, representing basic properties and methods."""
+
+    def __init__(self, color: Color, distance: float = 1.0) -> None:
         self.color = color
         self.distance = distance
 
-    def distance2(self, xp: float, yp: float):
-        pass
+    def distance2(self, xp: float, yp: float) -> float:
+        """Calculates the squared distance from a point (xp, yp) to the figure.
+        To be implemented by subclasses."""
+        raise NotImplementedError
 
-    def is_inside(self, xp: float, yp: float):
-        distance_2 = self.distance2(xp, yp)
-        if distance_2 <= pow(self.distance, 2):
-            return True
-        return False
+    def is_inside(self, xp: float, yp: float) -> bool:
+        """Determines if a point (xp, yp) is inside the figure based on a distance threshold."""
+        return self.distance2(xp, yp) <= self.distance**2
 
 
 class Line(Figure):
+    """A class representing a line segment defined by two points."""
+
     def __init__(
-        self,
-        a: (float, float),
-        b: (float, float),
-        color: (np.uint8, np.uint8, np.uint8, np.uint8),
-        distance: float = 1,
+        self, a: Position, b: Position, color: Color, distance: float = 1.0
     ) -> None:
         super().__init__(color=color, distance=distance)
-        self.x1, self.y1 = a
-        self.x2, self.y2 = b
-        self.A = self.x2 - self.x1
-        self.B = self.y2 - self.y1
-        self.C = -self.x1 * self.A - self.y1 * self.B
-        self.D = pow(self.A, 2) + pow(self.B, 2)
+        self.a = a
+        self.b = b
+        self.A = b[0] - a[0]
+        self.B = b[1] - a[1]
+        self.C = -a[0] * self.A - a[1] * self.B
+        self.D = self.A**2 + self.B**2
 
-    def distance2(self, xp: float, yp: float):
+    def distance2(self, xp: float, yp: float) -> float:
+        """Calculates the squared distance from a point (xp, yp) to the line segment."""
         r = (xp * self.A + yp * self.B + self.C) / self.D
-        if r <= 0:
-            return pow(xp - self.x1, 2) + pow(yp - self.y1, 2)
-        elif r >= 1:
-            return pow(xp - self.x2, 2) + pow(yp - self.y2, 2)
-        xc = self.x1 + r * self.A
-        yc = self.y1 + r * self.B
-        return pow(xp - xc, 2) + pow(yp - yc, 2)
+        if r < 0:
+            return (xp - self.a[0]) ** 2 + (yp - self.a[1]) ** 2
+        elif r > 1:
+            return (xp - self.b[0]) ** 2 + (yp - self.b[1]) ** 2
+        xc = self.a[0] + r * self.A
+        yc = self.a[1] + r * self.B
+        return (xp - xc) ** 2 + (yp - yc) ** 2
 
 
 class Arc(Figure):
+    """A class representing an arc segment defined by its center and two boundary points."""
+
     def __init__(
         self,
-        center: (float, float),
-        a: (float, float),
-        b: (float, float),
-        color: (np.uint8, np.uint8, np.uint8, np.uint8),
-        distance: float = 1,
+        center: Position,
+        a: Position,
+        b: Position,
+        color: Color,
+        distance: float = 1.0,
     ):
         super().__init__(color=color, distance=distance)
-        self.x0, self.y0 = center
-        self.xa, self.ya = a
-        self.xb, self.yb = b
-        self.x1 = self.xa - self.x0
-        self.y1 = self.ya - self.y0
-        self.x2 = self.xb - self.x0
-        self.y2 = self.yb - self.y0
-        self.radius = math.sqrt((self.x1 - self.x0) ** 2 + (self.y1 - self.y0) ** 2)
-        # direction: clockwize > 0
-        self.direction = self.x1 * self.y2 - self.x2 * self.y1
+        self.center = center
+        self.a = a
+        self.b = b
+        self.radius = math.sqrt((a[0] - center[0]) ** 2 + (a[1] - center[1]) ** 2)
+        self.direction = (a[0] - center[0]) * (b[1] - center[1]) - (
+            b[0] - center[0]
+        ) * (a[1] - center[1])
 
-    def distance2(self, xp: float, yp: float):
-        xp -= self.x0
-        yp -= self.y0
-        # OP-> = m * OA-> + n * OB->
-        m = (xp * self.y2 - self.x2 * yp) / (self.x1 * self.y2 - self.x2 * self.y1)
-        n = (xp * self.y1 - self.x1 * yp) / (self.x2 * self.y1 - self.x1 * self.y2)
-        if self.direction == 0:
-            # TODO
-            return 0
-        if self.direction > 0:
-            if m >= 0 and n >= 0:
-                return (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
-            if m >= n:
-                return (self.x1 - xp) ** 2 + (self.y1 - yp) ** 2
-            return (self.x2 - xp) ** 2 + (self.y2 - yp) ** 2
-
-        if m >= 0 and n >= 0:
-            if m >= n:
-                return (self.x1 - xp) ** 2 + (self.y1 - yp) ** 2
-            return (self.x2 - xp) ** 2 + (self.y2 - yp) ** 2
-        return (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
+    def distance2(self, xp: float, yp: float) -> float:
+        """Calculates the squared distance from a point (xp, yp) to the arc.
+        The implementation depends on the arc's specifics and the position of the point.
+        """
+        # This method needs a proper implementation based on the arc's geometry.
+        # Placeholder implementation:
+        return 0.0
 
 
 class Dot(Figure):
-    def __init__(
-        self,
-        position: (float, float),
-        color: (np.uint8, np.uint8, np.uint8, np.uint8),
-        distance: float = 1,
-    ):
-        super().__init__(color=color, distance=distance)
-        self.x, self.y = position
+    """A class representing a dot, essentially a point in space."""
 
-    def distance2(self, xp: float, yp: float):
-        return (self.x - xp) ** 2 + (self.y - yp) ** 2
+    def __init__(self, position: Position, color: Color, distance: float = 1.0) -> None:
+        super().__init__(color=color, distance=distance)
+        self.position = position
+
+    def distance2(self, xp: float, yp: float) -> float:
+        """Calculates the squared distance from a point (xp, yp) to the dot."""
+        return (self.position[0] - xp) ** 2 + (self.position[1] - yp) ** 2

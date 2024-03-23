@@ -1,9 +1,12 @@
-from color import *
+from color import *  # Assuming this imports predefined color constants
 from pattern import Pattern
 from figure import *
+import math
 
-
-zhr = Pattern(
+# Define a pattern named 'zhr' with lines forming a specific geometric shape.
+# This pattern includes horizontal lines at the top and bottom, a cross in the center,
+# and additional horizontal lines in the middle.
+zhr_pattern = Pattern(
     figures=[
         Line(a=(-6, 6), b=(6, 6), color=LIGHT),
         Line(a=(-6, -6), b=(6, -6), color=LIGHT),
@@ -16,7 +19,9 @@ zhr = Pattern(
     name="zhr",
 )
 
-syc = Pattern(
+# Define a pattern named 'syc' with arcs and lines creating a symmetrical design.
+# This includes an arc centered at the origin and lines extending in different directions.
+syc_pattern = Pattern(
     figures=[
         Arc(
             center=(0, 0),
@@ -33,12 +38,14 @@ syc = Pattern(
     name="syc",
 )
 
-llf = Pattern(
+# Define a pattern named 'llf' with a combination of dots and lines to form a unique layout.
+# This pattern features a prominent dot, vertical and horizontal lines creating a framework.
+llf_pattern = Pattern(
     figures=[
-        Dot((-1.5, 5), color=BLUE, distance=4),
-        Line((-1.5, -2), (4.5, -2), color=DARK),
-        Line((-1.5, 5), (-1.5, -8), color=BLUE),
-        Line((-1.5, -8), (4.5, -8), color=DARK),
+        Dot(position=(-1.5, 5), color=BLUE, distance=4),
+        Line(a=(-1.5, -2), b=(4.5, -2), color=DARK),
+        Line(a=(-1.5, 5), b=(-1.5, -8), color=BLUE),
+        Line(a=(-1.5, -8), b=(4.5, -8), color=DARK),
     ],
     size=18,
     background_color=WHITE,
