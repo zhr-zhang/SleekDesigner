@@ -8,13 +8,14 @@ import math
 # and additional horizontal lines in the middle.
 zhr_pattern = Pattern(
     figures=[
-        Line(a=(-6, 6), b=(6, 6), color=LIGHT),
-        Line(a=(-6, -6), b=(6, -6), color=LIGHT),
-        Line(a=(-2, 2), b=(2, 2), color=LIGHT),
-        Line(a=(-2, -2), b=(2, -2), color=LIGHT),
-        Line(a=(6, 6), b=(-6, -6), color=RED),
+        Line(a=Point(-6, 6), b=Point(6, 6), color=LIGHT),
+        Line(a=Point(-6, -6), b=Point(6, -6), color=LIGHT),
+        Line(a=Point(-2, 2), b=Point(2, 2), color=LIGHT),
+        Line(a=Point(-2, -2), b=Point(2, -2), color=LIGHT),
+        Line(a=Point(6, 6), b=Point(-6, -6), color=RED),
     ],
-    size=12 * math.sqrt(2) + 2,
+    grids_x=12 * math.sqrt(2) + 2,
+    grids_y=12 * math.sqrt(2) + 2,
     background_color=BLACK,
     name="zhr",
 )
@@ -24,16 +25,19 @@ zhr_pattern = Pattern(
 syc_pattern = Pattern(
     figures=[
         Arc(
-            center=(0, 0),
-            a=(8 * math.sqrt(2), 4),
-            b=(8 * math.sqrt(2), -4),
+            center=Point(0, 0),
+            a=Point(8 * math.sqrt(2), 4),
+            b=Point(8 * math.sqrt(2), -4),
             color=LIGHT,
         ),
-        Line(a=(0, 0), b=(-4 * math.sqrt(2), 4 * math.sqrt(2)), color=PURPLE),
-        Line(a=(0, 0), b=(-4 * math.sqrt(2), -4 * math.sqrt(2)), color=PURPLE),
-        Line(a=(0, 0), b=(12, 0), color=LIGHT),
+        Line(a=Point(0, 0), b=Point(-4 * math.sqrt(2), 4 * math.sqrt(2)), color=PURPLE),
+        Line(
+            a=Point(0, 0), b=Point(-4 * math.sqrt(2), -4 * math.sqrt(2)), color=PURPLE
+        ),
+        Line(a=Point(0, 0), b=Point(12, 0), color=LIGHT),
     ],
-    size=26,
+    grids_x=26,
+    grids_y=26,
     background_color=BLACK,
     name="syc",
 )
@@ -42,12 +46,13 @@ syc_pattern = Pattern(
 # This pattern features a prominent dot, vertical and horizontal lines creating a framework.
 llf_pattern = Pattern(
     figures=[
-        Dot(position=(-1.5, 5), color=BLUE, distance=4),
-        Line(a=(-1.5, -2), b=(4.5, -2), color=DARK),
-        Line(a=(-1.5, 5), b=(-1.5, -8), color=BLUE),
-        Line(a=(-1.5, -8), b=(4.5, -8), color=DARK),
+        Dot(position=Point(-1.5, 5), color=BLUE, distance=4),
+        Line(a=Point(-1.5, -2), b=Point(4.5, -2), color=DARK),
+        Line(a=Point(-1.5, 5), b=Point(-1.5, -8), color=BLUE),
+        Line(a=Point(-1.5, -8), b=Point(4.5, -8), color=DARK),
     ],
-    size=18,
+    grids_x=18,
+    grids_y=18,
     background_color=WHITE,
     name="llf",
 )
