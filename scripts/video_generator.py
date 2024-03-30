@@ -30,29 +30,23 @@ class VideoGenerator:
     def generate(
         self,
         fps: float = 30,
-        duration: float = 5,
         width: int = 640,
         height: int = 480,
         ratio: float = 0.7,
     ) -> None:
         time = 0
         frames = []
-        while time < duration:
+        while True:
             pattern = self.dynamic_pattern(time)
-            frames.append(
-                pattern.generate(
-                    width=width,
-                    height=height,
-                    ratio=ratio,
-                ),
-            )
+            if pattern == "finished":
+                break
+            frames.append(pattern.generate(width=width, height=height, ratio=ratio))
             time += 1 / fps
         return frames
 
     def save_video(
         self,
         fps: float = 30,
-        duration: float = 5,
         width: int = 640,
         height: int = 480,
         ratio: float = 0.7,
@@ -60,7 +54,6 @@ class VideoGenerator:
     ) -> None:
         frames = self.generate(
             fps=fps,
-            duration=duration,
             width=width,
             height=height,
             ratio=ratio,

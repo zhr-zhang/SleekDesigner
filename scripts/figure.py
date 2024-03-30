@@ -95,24 +95,24 @@ class Arc(Figure):
         """Calculates the squared distance from a point (xp, yp) to the arc.
         The implementation depends on the arc's specifics and the position of the point.
         """
-        xp -= self.x0
-        yp -= self.y0
+        xp -= self.center.x
+        yp -= self.center.y
         # OP-> = m * OA-> + n * OB->
-        m = (xp * self.y2 - self.x2 * yp) / (self.x1 * self.y2 - self.x2 * self.y1)
-        n = (xp * self.y1 - self.x1 * yp) / (self.x2 * self.y1 - self.x1 * self.y2)
+        m = (xp * self.b.y - self.b.x * yp) / (self.a.x * self.b.y - self.b.x * self.a.y)
+        n = (xp * self.a.y - self.a.x * yp) / (self.b.x * self.a.y - self.a.x * self.b.y)
         if self.direction == 0:
             raise NotImplementedError
         if self.direction > 0:
             if m >= 0 and n >= 0:
                 return (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
             if m >= n:
-                return (self.x1 - xp) ** 2 + (self.y1 - yp) ** 2
-            return (self.x2 - xp) ** 2 + (self.y2 - yp) ** 2
+                return (self.a.x - xp) ** 2 + (self.a.y - yp) ** 2
+            return (self.b.x - xp) ** 2 + (self.b.y - yp) ** 2
 
         if m >= 0 and n >= 0:
             if m >= n:
-                return (self.x1 - xp) ** 2 + (self.y1 - yp) ** 2
-            return (self.x2 - xp) ** 2 + (self.y2 - yp) ** 2
+                return (self.a.x - xp) ** 2 + (self.a.y - yp) ** 2
+            return (self.b.x - xp) ** 2 + (self.b.y - yp) ** 2
         return (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
 
     def rotate(self, degree: float):
