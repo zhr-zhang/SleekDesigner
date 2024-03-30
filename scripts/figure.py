@@ -49,16 +49,23 @@ class Line(Figure):
         self.C = -a.x * self.A - a.y * self.B
         self.D = self.A**2 + self.B**2
 
-    def distance2(self, xp: float, yp: float) -> float:
-        """Calculates the squared distance from a point (xp, yp) to the line segment."""
+    def distance2(self, xp: np.ndarray, yp: np.ndarray) -> np.ndarray:
         r = (xp * self.A + yp * self.B + self.C) / self.D
-        if r < 0:
-            return (xp - self.a.x) ** 2 + (yp - self.a.y) ** 2
-        elif r > 1:
-            return (xp - self.b.x) ** 2 + (yp - self.b.y) ** 2
+        condition1 = r < 0
+        condition2 = r > 1
         xc = self.a.x + r * self.A
         yc = self.a.y + r * self.B
-        return (xp - xc) ** 2 + (yp - yc) ** 2
+
+        dist2 = np.where(
+            condition1,
+            (xp - self.a.x) ** 2 + (yp - self.a.y) ** 2,
+            np.where(
+                condition2,
+                (xp - self.b.x) ** 2 + (yp - self.b.y) ** 2,
+                (xp - xc) ** 2 + (yp - yc) ** 2,
+            ),
+        )
+        return dist2
 
     def rotate(self, degree: float):
         new_a = self.a.rotate(degree)
@@ -91,29 +98,36 @@ class Arc(Figure):
             a.y - center.y
         )
 
-    def distance2(self, xp: float, yp: float) -> float:
-        """Calculates the squared distance from a point (xp, yp) to the arc.
-        The implementation depends on the arc's specifics and the position of the point.
-        """
-        xp -= self.center.x
-        yp -= self.center.y
-        # OP-> = m * OA-> + n * OB->
-        m = (xp * self.b.y - self.b.x * yp) / (self.a.x * self.b.y - self.b.x * self.a.y)
-        n = (xp * self.a.y - self.a.x * yp) / (self.b.x * self.a.y - self.a.x * self.b.y)
-        if self.direction == 0:
-            raise NotImplementedError
-        if self.direction > 0:
-            if m >= 0 and n >= 0:
-                return (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
-            if m >= n:
-                return (self.a.x - xp) ** 2 + (self.a.y - yp) ** 2
-            return (self.b.x - xp) ** 2 + (self.b.y - yp) ** 2
+    def distance2(self, xp: np.ndarray, yp: np.ndarray) -> np.ndarray:
+        xp_adj = xp - self.center.x
+        yp_adj = yp - self.center.y
+        m = (xp_adj * self.b.y - self.b.x * yp_adj) / (
+            self.a.x * self.b.y - self.b.x * self.a.y
+        )
+        n = (xp_adj * self.a.y - self.a.x * yp_adj) / (
+            self.b.x * self.a.y - self.a.x * self.b.y
+        )
 
-        if m >= 0 and n >= 0:
-            if m >= n:
-                return (self.a.x - xp) ** 2 + (self.a.y - yp) ** 2
-            return (self.b.x - xp) ** 2 + (self.b.y - yp) ** 2
-        return (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
+        condition1 = m >= 0
+        condition2 = n >= 0
+        dist_to_center = np.sqrt(xp_adj**2 + yp_adj**2) - self.radius
+
+        dist_a = (self.a.x - xp_adj) ** 2 + (self.a.y - yp_adj) ** 2
+        dist_b = (self.b.x - xp_adj) ** 2 + (self.b.y - yp_adj) ** 2
+
+        # Handling the direction and conditions for distances
+        if self.direction > 0:
+            condition = np.logical_and(condition1, condition2)
+            dist = np.where(
+                condition, dist_to_center**2, np.where(m >= n, dist_a, dist_b)
+            )
+        else:
+            condition = np.logical_and(condition1, condition2)
+            dist = np.where(
+                condition, np.where(m >= n, dist_a, dist_b), dist_to_center**2
+            )
+
+        return dist
 
     def rotate(self, degree: float):
         new_center = self.center.rotate(degree)
@@ -140,8 +154,7 @@ class Dot(Figure):
         super().__init__(color=color, distance=distance)
         self.position = position
 
-    def distance2(self, xp: float, yp: float) -> float:
-        """Calculates the squared distance from a point (xp, yp) to the dot."""
+    def distance2(self, xp: np.ndarray, yp: np.ndarray) -> np.ndarray:
         return (self.position.x - xp) ** 2 + (self.position.y - yp) ** 2
 
     def rotate(self, degree: float):

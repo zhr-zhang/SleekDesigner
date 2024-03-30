@@ -8,11 +8,11 @@ import math
 # and additional horizontal lines in the middle.
 zhr_pattern = Pattern(
     figures=[
+        Line(a=Point(6, 6), b=Point(-6, -6), color=RED),
         Line(a=Point(-6, 6), b=Point(6, 6), color=LIGHT),
         Line(a=Point(-6, -6), b=Point(6, -6), color=LIGHT),
         Line(a=Point(-2, 2), b=Point(2, 2), color=LIGHT),
         Line(a=Point(-2, -2), b=Point(2, -2), color=LIGHT),
-        Line(a=Point(6, 6), b=Point(-6, -6), color=RED),
     ],
     grids_x=12 * math.sqrt(2) + 2,
     grids_y=12 * math.sqrt(2) + 2,
@@ -55,4 +55,16 @@ llf_pattern = Pattern(
     grids_y=18,
     background_color=WHITE,
     name="llf",
+)
+debug = Pattern(
+    figures=[
+        Dot(Point(3, 3), color=RED, distance=4),
+        Dot(Point(-3, 3), color=BLUE, distance=4),
+        Dot(Point(-3, -3), color=YELLOW, distance=4),
+        Dot(Point(3, -3), color=LIGHT, distance=4),
+    ],
+    background_color=BLACK,
+    grids_x=12,
+    grids_y=12,
+    name="debug",
 )

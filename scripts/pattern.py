@@ -36,12 +36,7 @@ class Pattern:
             name=self.name,
         )
 
-    def generate(
-        self,
-        width=1024,
-        height=1024,
-        ratio=0.7,
-    ) -> np.ndarray:
+    def generate(self, width=1024, height=1024, ratio=0.7) -> np.ndarray:
         image_ratio = width / height
         if image_ratio > self.canvas_ratio:
             canvas_height = int(height * ratio)
@@ -49,29 +44,25 @@ class Pattern:
         else:
             canvas_width = int(width * ratio)
             canvas_height = int(canvas_width / self.canvas_ratio)
-        self.value = np.full((width, height, 4), self.background_color, dtype=np.uint8)
-        logo_slice = np.full(
-            (canvas_width, canvas_height, 4), self.background_color, dtype=np.uint8
+
+        # Create a full background canvas
+        self.value = np.full((height, width, 4), self.background_color, dtype=np.uint8)
+
+        # Generate a meshgrid for x and y coordinates
+        xs, ys = np.meshgrid(
+            np.linspace(-self.grids_x / 2, self.grids_x / 2, canvas_width),
+            np.linspace(-self.grids_y / 2, self.grids_y / 2, canvas_height),
         )
 
-        unit = canvas_width / self.grids_x
-        half_width = canvas_width / 2
-        half_height = canvas_height / 2
-        for x in range(canvas_width):
-            for y in range(canvas_height):
-                m = (x - half_width) / unit
-                n = (y - half_height) / unit
-                for figure in self.figures:
-                    if figure.is_inside(m, n):
-                        logo_slice[x, y, :] = figure.color
-                        break
+        # Check for each figure if the points are inside, vectorized
+        for figure in self.figures:
+            mask = figure.is_inside(xs, ys)
+            self.value[
+                (height - canvas_height) // 2 : (height + canvas_height) // 2,
+                (width - canvas_width) // 2 : (width + canvas_width) // 2,
+            ][mask] = figure.color
 
-        self.value[
-            (width - canvas_width) // 2 : (width + canvas_width) // 2,
-            (height - canvas_height) // 2 : (height + canvas_height) // 2,
-        ] = logo_slice
-        self.value = np.rot90(self.value)
-
+        self.value = np.flipud(self.value)
         return self.value
 
     def save_image(
