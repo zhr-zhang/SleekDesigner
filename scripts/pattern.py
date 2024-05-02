@@ -44,26 +44,19 @@ class Pattern:
         else:
             canvas_width = int(width * ratio)
             canvas_height = int(canvas_width / self.canvas_ratio)
-
-        # Create a full background canvas
-        self.value = np.full((height, width, 4), self.background_color, dtype=np.uint8)
-
-        # Generate a meshgrid for x and y coordinates
         xs, ys = np.meshgrid(
             np.linspace(-self.grids_x / 2, self.grids_x / 2, canvas_width),
             np.linspace(-self.grids_y / 2, self.grids_y / 2, canvas_height),
         )
 
-        # Check for each figure if the points are inside, vectorized
+        image_array = np.full((height, width, 4), self.background_color, dtype=np.uint8)
         for figure in self.figures:
             mask = figure.is_inside(xs, ys)
-            self.value[
+            image_array[
                 (height - canvas_height) // 2 : (height + canvas_height) // 2,
                 (width - canvas_width) // 2 : (width + canvas_width) // 2,
             ][mask] = figure.color
-
-        self.value = np.flipud(self.value)
-        return self.value
+        return np.flipud(image_array)
 
     def save_image(
         self,

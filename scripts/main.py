@@ -4,10 +4,10 @@ from pattern import Pattern
 from color import *
 from tqdm import tqdm
 from moviepy.editor import ImageSequenceClip
-from video_generator import VideoGenerator
+from animation import VideoGenerator
 from figure import *
 
-# obj = debug
+# obj = zhr_pattern
 # format = "png"
 
 # obj.save_image(
@@ -17,9 +17,9 @@ from figure import *
 
 
 def dynamic_zhr(time: float) -> Pattern:
-    stretch = 0.4
-    point_appear = 0.2
-    rotate = 0.4
+    stretch = 1
+    point_appear = 0.5
+    rotate = 1
 
     grid_x = 12 * math.sqrt(2) + 2
     grid_y = 12 * math.sqrt(2) + 2

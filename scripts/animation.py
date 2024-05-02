@@ -50,7 +50,7 @@ class VideoGenerator:
         width: int = 640,
         height: int = 480,
         ratio: float = 0.7,
-        file_path: str = "line.mp4",
+        file_path: str = "test.mp4",
     ) -> None:
         frames = self.generate(
             fps=fps,

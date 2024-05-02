@@ -118,16 +118,16 @@ class Arc(Figure):
         # Handling the direction and conditions for distances
         if self.direction > 0:
             condition = np.logical_and(condition1, condition2)
-            dist = np.where(
+            dist2 = np.where(
                 condition, dist_to_center**2, np.where(m >= n, dist_a, dist_b)
             )
         else:
             condition = np.logical_and(condition1, condition2)
-            dist = np.where(
+            dist2 = np.where(
                 condition, np.where(m >= n, dist_a, dist_b), dist_to_center**2
             )
 
-        return dist
+        return dist2
 
     def rotate(self, degree: float):
         new_center = self.center.rotate(degree)

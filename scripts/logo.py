@@ -1,11 +1,8 @@
-from color import *  # Assuming this imports predefined color constants
+from color import *
 from pattern import Pattern
 from figure import *
 import math
 
-# Define a pattern named 'zhr' with lines forming a specific geometric shape.
-# This pattern includes horizontal lines at the top and bottom, a cross in the center,
-# and additional horizontal lines in the middle.
 zhr_pattern = Pattern(
     figures=[
         Line(a=Point(6, 6), b=Point(-6, -6), color=RED),
@@ -20,8 +17,6 @@ zhr_pattern = Pattern(
     name="zhr",
 )
 
-# Define a pattern named 'syc' with arcs and lines creating a symmetrical design.
-# This includes an arc centered at the origin and lines extending in different directions.
 syc_pattern = Pattern(
     figures=[
         Arc(
@@ -42,8 +37,6 @@ syc_pattern = Pattern(
     name="syc",
 )
 
-# Define a pattern named 'llf' with a combination of dots and lines to form a unique layout.
-# This pattern features a prominent dot, vertical and horizontal lines creating a framework.
 llf_pattern = Pattern(
     figures=[
         Dot(position=Point(-1.5, 5), color=BLUE, distance=4),
@@ -56,6 +49,23 @@ llf_pattern = Pattern(
     background_color=WHITE,
     name="llf",
 )
+
+llf_injured_pattern = Pattern(
+    figures=[
+        Dot(position=Point(0.9, -5.9), color=RED, distance=1),
+        Dot(position=Point(-1.5, 5), color=BLUE, distance=4),
+        Line(a=Point(-1.5, -2), b=Point(4.5, -2), color=LIGHT),
+        Line(a=Point(-1.5, 5), b=Point(-1.5, -8), color=BLUE),
+        Line(a=Point(-1.5, -8), b=Point(4.5, -8), color=LIGHT),
+        Line(a=Point(-1.5, -8), b=Point(1, -6), color=LIGHT),
+        Line(a=Point(1, -6), b=Point(3.5, -5.5), color=LIGHT),
+    ],
+    grids_x=18,
+    grids_y=18,
+    background_color=BLACK,
+    name="llfInjured",
+)
+
 debug = Pattern(
     figures=[
         Dot(Point(3, 3), color=RED, distance=4),
