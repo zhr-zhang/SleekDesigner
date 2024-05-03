@@ -1,106 +1,166 @@
 import math
 import numpy as np
+from typing import Tuple
+from abc import ABC, abstractmethod
+from point import Point
 
 
-class Figure:
-    def __init__(
-        self,
-        color: (np.uint8, np.uint8, np.uint8, np.uint8),
-        distance: float = 1,
-    ):
+Color = Tuple[np.uint8, np.uint8, np.uint8, np.uint8]
+
+
+class Figure(ABC):
+    """A base class for geometric figures, representing basic properties and methods."""
+
+    def __init__(self, color: Color, distance: float = 1.0) -> None:
         self.color = color
         self.distance = distance
 
-    def distance2(self, xp: float, yp: float):
-        pass
+    @abstractmethod
+    def distance2(self, xp: float, yp: float) -> float:
+        """Calculates the squared distance from a point (xp, yp) to the figure.
+        To be implemented by subclasses."""
+        raise NotImplementedError
 
-    def is_inside(self, xp: float, yp: float):
-        distance_2 = self.distance2(xp, yp)
-        if distance_2 <= pow(self.distance, 2):
-            return True
-        return False
+    def is_inside(self, xp: float, yp: float) -> bool:
+        """Determines if a point (xp, yp) is inside the figure based on a distance threshold."""
+        return self.distance2(xp, yp) <= self.distance**2
+
+    @abstractmethod
+    def rotate(self, degree: float):
+        """Rotates the figure by a given angle (in degrees)."""
+        raise NotImplementedError
 
 
 class Line(Figure):
+    """A class representing a line segment defined by two points."""
+
     def __init__(
         self,
-        a: (float, float),
-        b: (float, float),
-        color: (np.uint8, np.uint8, np.uint8, np.uint8),
-        distance: float = 1,
+        a: Point,
+        b: Point,
+        color: Color,
+        distance: float = 1.0,
     ) -> None:
         super().__init__(color=color, distance=distance)
-        self.x1, self.y1 = a
-        self.x2, self.y2 = b
-        self.A = self.x2 - self.x1
-        self.B = self.y2 - self.y1
-        self.C = -self.x1 * self.A - self.y1 * self.B
-        self.D = pow(self.A, 2) + pow(self.B, 2)
+        self.a = a
+        self.b = b
+        self.A = b.x - a.x
+        self.B = b.y - a.y
+        self.C = -a.x * self.A - a.y * self.B
+        self.D = self.A**2 + self.B**2
 
-    def distance2(self, xp: float, yp: float):
+    def distance2(self, xp: np.ndarray, yp: np.ndarray) -> np.ndarray:
         r = (xp * self.A + yp * self.B + self.C) / self.D
-        if r <= 0:
-            return pow(xp - self.x1, 2) + pow(yp - self.y1, 2)
-        elif r >= 1:
-            return pow(xp - self.x2, 2) + pow(yp - self.y2, 2)
-        xc = self.x1 + r * self.A
-        yc = self.y1 + r * self.B
-        return pow(xp - xc, 2) + pow(yp - yc, 2)
+        condition1 = r < 0
+        condition2 = r > 1
+        xc = self.a.x + r * self.A
+        yc = self.a.y + r * self.B
+
+        dist2 = np.where(
+            condition1,
+            (xp - self.a.x) ** 2 + (yp - self.a.y) ** 2,
+            np.where(
+                condition2,
+                (xp - self.b.x) ** 2 + (yp - self.b.y) ** 2,
+                (xp - xc) ** 2 + (yp - yc) ** 2,
+            ),
+        )
+        return dist2
+
+    def rotate(self, degree: float):
+        new_a = self.a.rotate(degree)
+        new_b = self.b.rotate(degree)
+        return Line(
+            a=new_a,
+            b=new_b,
+            color=self.color,
+            distance=self.distance,
+        )
 
 
 class Arc(Figure):
+    """A class representing an arc segment defined by its center and two boundary points."""
+
     def __init__(
         self,
-        center: (float, float),
-        a: (float, float),
-        b: (float, float),
-        color: (np.uint8, np.uint8, np.uint8, np.uint8),
-        distance: float = 1,
+        center: Point,
+        a: Point,
+        b: Point,
+        color: Color,
+        distance: float = 1.0,
     ):
         super().__init__(color=color, distance=distance)
-        self.x0, self.y0 = center
-        self.xa, self.ya = a
-        self.xb, self.yb = b
-        self.x1 = self.xa - self.x0
-        self.y1 = self.ya - self.y0
-        self.x2 = self.xb - self.x0
-        self.y2 = self.yb - self.y0
-        self.radius = math.sqrt((self.x1 - self.x0) ** 2 + (self.y1 - self.y0) ** 2)
-        # direction: clockwize > 0
-        self.direction = self.x1 * self.y2 - self.x2 * self.y1
+        self.center = center
+        self.a = a
+        self.b = b
+        self.radius = math.sqrt((a.x - center.x) ** 2 + (a.y - center.y) ** 2)
+        self.direction = (a.x - center.x) * (b.y - center.y) - (b.x - center.x) * (
+            a.y - center.y
+        )
 
-    def distance2(self, xp: float, yp: float):
-        xp -= self.x0
-        yp -= self.y0
-        # OP-> = m * OA-> + n * OB->
-        m = (xp * self.y2 - self.x2 * yp) / (self.x1 * self.y2 - self.x2 * self.y1)
-        n = (xp * self.y1 - self.x1 * yp) / (self.x2 * self.y1 - self.x1 * self.y2)
-        if self.direction == 0:
-            # TODO
-            return 0
+    def distance2(self, xp: np.ndarray, yp: np.ndarray) -> np.ndarray:
+        xp_adj = xp - self.center.x
+        yp_adj = yp - self.center.y
+        m = (xp_adj * self.b.y - self.b.x * yp_adj) / (
+            self.a.x * self.b.y - self.b.x * self.a.y
+        )
+        n = (xp_adj * self.a.y - self.a.x * yp_adj) / (
+            self.b.x * self.a.y - self.a.x * self.b.y
+        )
+
+        condition1 = m >= 0
+        condition2 = n >= 0
+        dist_to_center = np.sqrt(xp_adj**2 + yp_adj**2) - self.radius
+
+        dist_a = (self.a.x - xp_adj) ** 2 + (self.a.y - yp_adj) ** 2
+        dist_b = (self.b.x - xp_adj) ** 2 + (self.b.y - yp_adj) ** 2
+
+        # Handling the direction and conditions for distances
         if self.direction > 0:
-            if m >= 0 and n >= 0:
-                return (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
-            if m >= n:
-                return (self.x1 - xp) ** 2 + (self.y1 - yp) ** 2
-            return (self.x2 - xp) ** 2 + (self.y2 - yp) ** 2
+            condition = np.logical_and(condition1, condition2)
+            dist2 = np.where(
+                condition, dist_to_center**2, np.where(m >= n, dist_a, dist_b)
+            )
+        else:
+            condition = np.logical_and(condition1, condition2)
+            dist2 = np.where(
+                condition, np.where(m >= n, dist_a, dist_b), dist_to_center**2
+            )
 
-        if m >= 0 and n >= 0:
-            if m >= n:
-                return (self.x1 - xp) ** 2 + (self.y1 - yp) ** 2
-            return (self.x2 - xp) ** 2 + (self.y2 - yp) ** 2
-        return (math.sqrt(xp**2 + yp**2) - self.radius) ** 2
+        return dist2
+
+    def rotate(self, degree: float):
+        new_center = self.center.rotate(degree)
+        new_a = self.a.rotate(degree)
+        new_b = self.b.rotate(degree)
+        return Arc(
+            center=new_center,
+            a=new_a,
+            b=new_b,
+            color=self.color,
+            distance=self.distance,
+        )
 
 
 class Dot(Figure):
+    """A class representing a dot, essentially a point in space."""
+
     def __init__(
         self,
-        position: (float, float),
-        color: (np.uint8, np.uint8, np.uint8, np.uint8),
-        distance: float = 1,
-    ):
+        position: Point,
+        color: Color,
+        distance: float = 1.0,
+    ) -> None:
         super().__init__(color=color, distance=distance)
-        self.x, self.y = position
+        self.position = position
 
-    def distance2(self, xp: float, yp: float):
-        return (self.x - xp) ** 2 + (self.y - yp) ** 2
+    def distance2(self, xp: np.ndarray, yp: np.ndarray) -> np.ndarray:
+        return (self.position.x - xp) ** 2 + (self.position.y - yp) ** 2
+
+    def rotate(self, degree: float):
+        new_position = self.position.rotate(degree)
+        return Dot(
+            position=new_position,
+            color=self.color,
+            distance=self.distance,
+        )

@@ -1,107 +1,77 @@
-import math
 import numpy as np
 import os
 from PIL import Image
-from tqdm import tqdm
-from moviepy.editor import ImageSequenceClip
 from color import *
 from figure import *
 
 
 class Pattern:
+
     def __init__(
         self,
-        figures: list[Figure] = [Line(a=(0, -5), b=(0, 5), color=RED)],
-        size: int = 11,
-        background_color: (np.uint8, np.uint8, np.uint8, np.uint8) = BLACK,
+        figures: list[Figure] = None,
+        grids_x: int = 10,
+        grids_y: int = 10,
+        background_color: Color = BLACK,
         name: str = "pattern",
     ) -> None:
+        if figures is None:
+            figures = [Line(a=(0, -3), b=(0, 3), color=RED)]
         self.figures = figures
-        self.size = size
+        self.grids_x = grids_x
+        self.grids_y = grids_y
         self.background_color = background_color
         self.name = name
+        self.canvas_ratio = self.grids_x / self.grids_y
 
-    def generate_image(
-        self,
-        width: int = 1024,
-        height: int = 1024,
-        ratio: float = 0.7,
-        angle_degrees: float = 0,
-    ):
-        logo_size = int(min(width, height) * ratio)
-        self.value = np.full((width, height, 4), self.background_color, dtype=np.uint8)
-        logo_slice = np.full(
-            (logo_size, logo_size, 4), self.background_color, dtype=np.uint8
+    def rotate(self, degree) -> "Pattern":
+        new_figures = []
+        for figure in self.figures:
+            new_figures.append(figure.rotate(degree))
+        return Pattern(
+            figures=new_figures,
+            grids_x=self.grids_x,
+            grids_y=self.grids_y,
+            background_color=self.background_color,
+            name=self.name,
         )
 
-        unit = logo_size / self.size
-        half_size = logo_size / 2
-        angle_arc = angle_degrees * math.pi / 180
-        sin_angle = math.sin(angle_arc)
-        cos_angle = math.cos(angle_arc)
-
-        for x in range(logo_size):
-            for y in range(logo_size):
-                m = (x - half_size) / unit
-                n = (y - half_size) / unit
-                x_in_logo = m * cos_angle + n * sin_angle
-                y_in_logo = -m * sin_angle + n * cos_angle
-                for figure in self.figures:
-                    if figure.is_inside(x_in_logo, y_in_logo):
-                        logo_slice[x, y, :] = figure.color
-                        break
-
-        self.value[
-            ((width - logo_size) // 2) : ((width + logo_size) // 2),
-            ((height - logo_size) // 2) : ((height + logo_size) // 2),
-        ] = logo_slice
-        self.value = np.rot90(self.value, k=1)
-
-        return self.value
-
-    def generate_video(
-        self,
-        ratio: float = 0.7,
-        filename: str = "wide1080",
-        width: int = 1024,
-        height: int = 1024,
-        background_color: (np.uint8, np.uint8, np.uint8, np.uint8) = BLACK,
-        start_angle_degrees: float = 0,
-        degree_per_second: float = 45,
-        fps: int = 30,
-        time_seconds: float = 8,
-    ):
-        save_folder = "video"
-        os.makedirs(save_folder, exist_ok=True)
-
-        num_frames = time_seconds * fps
-        angle_degree_per_frame = degree_per_second / fps
-
-        frames = []
-        progress_bar = tqdm(total=num_frames, desc="Generating frames", unit="frames")
-        for i in range(num_frames):
-            present_angle_degrees = start_angle_degrees + i * angle_degree_per_frame
-            frames.append(
-                self.generate_image(
-                    width=width,
-                    height=height,
-                    ratio=ratio,
-                    angle_degrees=present_angle_degrees,
-                )
-            )
-            progress_bar.update(1)
-        progress_bar.close()
-
-        output_path = os.path.join(save_folder, f"{filename}.mp4")
-        clip = ImageSequenceClip(frames, fps=fps)
-        clip.write_videofile(
-            output_path,
-            codec="libx264",
-            fps=fps,
-            preset="ultrafast",
-            ffmpeg_params=["-crf", "0"],
+    def generate(self, width=1024, height=1024, ratio=0.7) -> np.ndarray:
+        image_ratio = width / height
+        if image_ratio > self.canvas_ratio:
+            canvas_height = int(height * ratio)
+            canvas_width = int(canvas_height * self.canvas_ratio)
+        else:
+            canvas_width = int(width * ratio)
+            canvas_height = int(canvas_width / self.canvas_ratio)
+        xs, ys = np.meshgrid(
+            np.linspace(-self.grids_x / 2, self.grids_x / 2, canvas_width),
+            np.linspace(-self.grids_y / 2, self.grids_y / 2, canvas_height),
         )
 
-    @staticmethod
-    def save(obj, path, format="png") -> None:
-        Image.fromarray(obj, "RGBA").save(path, format=format)
+        image_array = np.full((height, width, 4), self.background_color, dtype=np.uint8)
+        for figure in self.figures:
+            mask = figure.is_inside(xs, ys)
+            image_array[
+                (height - canvas_height) // 2 : (height + canvas_height) // 2,
+                (width - canvas_width) // 2 : (width + canvas_width) // 2,
+            ][mask] = figure.color
+        return np.flipud(image_array)
+
+    def save_image(
+        self,
+        width=1024,
+        height=1024,
+        ratio=0.7,
+        path: str = "my_image.png",
+        format: str = "png",
+    ) -> None:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        Image.fromarray(
+            self.generate(
+                width=width,
+                height=height,
+                ratio=ratio,
+            ),
+            "RGBA",
+        ).save(path, format=format)
