@@ -1,6 +1,4 @@
-from typing import Dict, List, Tuple
-
-Color = Tuple[int, int, int, int]
+from sleek_designer.types import Color
 
 RED: Color = (240, 0, 80, 255)
 BLUE: Color = (8, 131, 163, 255)
@@ -13,7 +11,7 @@ WHITE: Color = (255, 255, 255, 255)
 BLACK: Color = (0, 0, 0, 255)
 TRANSPARENT: Color = (0, 0, 0, 0)
 
-COLOR_MAP: Dict[Color, str] = {
+COLOR_MAP: dict[Color, str] = {
     RED: "r",
     BLUE: "u",
     YELLOW: "y",
@@ -25,10 +23,10 @@ COLOR_MAP: Dict[Color, str] = {
     TRANSPARENT: "t",
 }
 
-THEME_COLORS: List[Color] = [RED, BLUE, YELLOW]
-BACKGROUND_COLORS: List[Color] = [BLACK, WHITE, TRANSPARENT]
+THEME_COLORS: list[Color] = [RED, BLUE, YELLOW]
+BACKGROUND_COLORS: list[Color] = [BLACK, WHITE, TRANSPARENT]
 
-color_schemes: List[List[Color]] = [
+color_schemes: list[list[Color]] = [
     [RED, LIGHT, BLACK],
     [RED, DARK, WHITE],
     [LIGHT, RED, BLACK],

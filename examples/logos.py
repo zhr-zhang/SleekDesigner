@@ -1,7 +1,20 @@
-from color import *
-from pattern import Pattern
-from figure import *
 import math
+
+from sleek_designer import (
+    Pattern,
+    Line,
+    Arc,
+    Dot,
+    Point,
+    RED,
+    BLUE,
+    YELLOW,
+    PURPLE,
+    DARK,
+    LIGHT,
+    WHITE,
+    BLACK,
+)
 
 zhr_pattern = Pattern(
     figures=[
@@ -78,3 +91,7 @@ debug = Pattern(
     grids_y=12,
     name="debug",
 )
+
+if __name__ == "__main__":
+    for pattern in [zhr_pattern, syc_pattern, llf_pattern, llf_injured_pattern, debug]:
+        pattern.save_image(path=f"logos/{pattern.name}/{pattern.name}.png")

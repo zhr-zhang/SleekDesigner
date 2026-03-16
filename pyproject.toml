@@ -1,0 +1,36 @@
+[project]
+name = "sleek-designer"
+version = "0.1.0"
+description = "A lightweight Python framework for creating beautiful geometric logos and animations"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "pillow",
+    "moviepy",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.3.1",
+    "mypy",
+    "pytest",
+]
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+target-version = ["py312"]
+line-length = 88
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
